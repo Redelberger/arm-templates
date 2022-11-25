@@ -313,7 +313,7 @@
             "parameters": {
                 "billingAccount": "[steps('lzSettings').billingAccount]",
                 "subscriptionName": "[steps('lzSettings').subscriptionName]",
-                "subscriptionOwnerId": "[steps('basics').subscriptionOwnerId]",
+                "subscriptionOwnerId": "[steps('lzSettings').subscriptionOwnerId]",
                 "managementGroupId": "[steps('basics').resourceScope.managementGroup.id]",
                 "budgetName": "[steps('lzBudget').budgetName]",
                 "amount": "[steps('lzBudget').amount]",
