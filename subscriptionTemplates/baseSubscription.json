@@ -2,10 +2,38 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "billingAccount": {
+            "type": "string"
+        },
+        "subscriptionName": {
+            "type": "array"
+        },
+        "subscriptionOwnerId": {
+            "type": "string"
+        },
+        "managementGroupId": {
+            "type": "string"
+        }
     },
     "variables": {
+        "Owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+        "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "Reader": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]"
     },
     "resources": [
+        {   "type": "Microsoft.Subscription/aliases",
+            "apiVersion": "2020-09-01",
+            "scope": "/",
+            "name": "[parameters('subscriptionName')]",
+            "properties": {
+                "workLoad": "Production",
+                "displayName": "[parameters('subscriptionName')]",
+                "billingScope": "[parameters('billingAccount')]",
+                "managementGroupId": "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('managementGroupId'))]",
+                "subscriptionOwnerId": "[parameters('subscriptionOwnerId')]",
+                "tags": "[concat('Ansprechpartner:', parameters('subscriptionOwnerId'))]"
+            }
+        }
     ],
     "outputs": {
     }
