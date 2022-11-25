@@ -89,7 +89,7 @@
     "resources": [
         {   "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[format('Create-', parameters('subscriptionName'))]",
+            "name": "Create-Subscription",
             "location": "[deployment().location]",
             "properties": {
                 "expressionEvaluationOptions": {
@@ -174,10 +174,10 @@
         },
         {   "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[format('Create-', parameters('budgetName'))]",
+            "name": "Create-Budget",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[format('Create-', parameters('subscriptionName'))]"
+                "Create-Subscription"
             ],
             "properties": {
                 "expressionEvaluationOptions": {
@@ -187,7 +187,7 @@
                 "parameters": {
                     "subscriptionId": {
                             // this cannot be referenced directly on the subscriptionId property of the deployment so needs to be nested one level
-                            "value": "[reference(resourceId('Microsoft.Resources/deployments', concat('Create-', parameters('subscriptionName')))).outputs.subscriptionId.value]"
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', concat('Create-', 'Subscription'))).outputs.subscriptionId.value]"
                     },
                     "subscriptionName": {
                         "value": "[parameters('subscriptionName')]"
