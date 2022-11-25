@@ -32,13 +32,6 @@
                                 }
                             }
                         },
-                        {   "name": "mgApi",
-                            "type": "Microsoft.Solutions.ArmApiControl",
-                            "request": {
-                                "method": "GET",
-                                "path": "providers/Microsoft.Management/managementGroups?api-version=2020-02-01"
-                            }
-                        },
                         {   "name": "esBillingApi",
                             "type": "Microsoft.Solutions.ArmApiControl",
                             "request": {
@@ -100,16 +93,6 @@
                             "placeholder": "Select Subscription Owner",
                             "constraints": {
                                 "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.id), '\"}')) )]",
-                                "required": true
-                            }
-                        },
-                        {   "name": "managementGroupId",
-                            "type": "Microsoft.Common.DropDown",
-                            "label": "Management Group",
-                            "placeholder": "Select Management Group",
-                            "defaultValue": "[steps('basics').resourceScope.managementGroup.id]",
-                            "constraints": {
-                                "allowedValues": "[map(steps('lzSettings').mgApi.value, (mg) => parse(concat('{\"label\":\"', mg.properties.displayName, '\",\"description\":\"', mg.id, '\",\"value\":\"', toLower(mg.name), '\"}')) )]",
                                 "required": true
                             }
                         },
@@ -298,7 +281,7 @@
                         {   "name": "contactRoles",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Roles",
-                            "defaultValue": "[[\"Owner\",\"Contributor\",\"Reader\"]",
+                            "defaultValue": "Owner",
                             "toolTip": "The list of contact roles to send the budget notification to when the threshold is exceeded.",
                             "constraints": {
                                 "required": false,
@@ -307,48 +290,15 @@
                             },
                             "visible": true
                         },
-                        {   "name": "subscriptionOwnerEmail",
-                            "type": "Microsoft.Common.DropDown",
-                            "label": "Subscription Owner Email",
-                            "placeholder": "Select Subscription Owner Email",
-                            "constraints": {
-                                "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.properties.displayName), '\"}')) )]",
-                                "required": true
-                            }
-                        },
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Emails",
-                            "defaultValue": "[steps('lzBudget').subscriptionOwnerEmail]",
+                            "defaultValue": "",
                             "toolTip": "The list of email addresses to send the budget notification to when the threshold is exceeded.",
                             "constraints": {
                                 "required": true,
                                 "regex": "^[a-z0-9]+@[a-z]+\\.[a-z]{2,3}$",
                                 "validationMessage": "The e-mail address must be in user@domain.tld format"
-                            },
-                            "visible": true
-                        },
-                        {   "name": "contactGroups",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Contact Groups",
-                            "defaultValue": "",
-                            "toolTip": "The list of action groups to send the budget notification to when the threshold is exceeded. It accepts array of strings.",
-                            "constraints": {
-                                "required": true,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {   "name": "groupObejctID",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Group Obejct ID",
-                            "defaultValue": "4b0f931c-24f6-4329-9cd1-40936c3ae843",
-                            "toolTip": "",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
                             },
                             "visible": true
                         }
@@ -361,7 +311,6 @@
                 "billingAccount": "[steps('lzSettings').billingAccount]",
                 "subscriptionName": "[steps('lzSettings').subscriptionName]",
                 "subscriptionOwnerId": "[steps('lzSettings').subscriptionOwnerId]",
-                "managementGroupId": "[steps('lzSettings').managementGroupId]",
                 "budgetName": "[steps('lzBudget').budgetName]",
                 "amount": "[steps('lzBudget').amount]",
                 "timeGrain": "[steps('lzBudget').timeGrain]",
@@ -370,9 +319,7 @@
                 "firstThreshold": "[steps('lzBudget').firstThreshold]",
                 "secondThreshold": "[steps('lzBudget').secondThreshold]",
                 "contactRoles": "[steps('lzBudget').contactRoles]",
-                "contactEmails": "[steps('lzBudget').contactEmails]",
-                "contactGroups": "[steps('lzBudget').contactGroups]",
-                "groupObejctID": "[steps('lzBudget').groupObejctID]"
+                "contactEmails": "[steps('lzBudget').contactEmails]"
             },
             "kind": "ManagementGroup",
             "location": "[steps('basics').resourceScope.location.name]",
