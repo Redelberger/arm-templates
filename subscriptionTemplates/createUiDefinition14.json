@@ -323,8 +323,7 @@
                 "firstThreshold": "[steps('lzBudget').firstThreshold]",
                 "secondThreshold": "[steps('lzBudget').secondThreshold]",
                 "contactRoles": "[steps('lzBudget').contactRoles]",
-                "contactEmails": "[steps('lzBudget').contactEmails]",
-                "groupObjectID": "[steps('lzBudget').groupObjectID]"
+                "contactEmails": "[steps('lzBudget').contactEmails]"
             },
             "kind": "ManagementGroup",
             "location": "[steps('basics').resourceScope.location.name]",
