@@ -3,10 +3,9 @@
     "view": {
         "kind": "Form",
         "properties": {
-            "title": "Test Form View",
+            "title": "Create new EA-Subscription",
             "steps": [
-                {
-                    "name": "basics",
+                {   "name": "basics",
                     "label": "Basics",
                     "elements": [
                         {
