@@ -281,7 +281,11 @@
                         {   "name": "contactRoles",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Roles",
-                            "defaultValue": "Owner",
+                            "defaultValue": [
+                                "Owner",
+                                "Contributor",
+                                "Reader"
+                            ],
                             "toolTip": "The list of contact roles to send the budget notification to when the threshold is exceeded.",
                             "constraints": {
                                 "required": false,
