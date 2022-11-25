@@ -174,7 +174,7 @@
         },
         {   "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[format('Create-', parameters('subscriptionName'))]",
+            "name": "[format('Create-', parameters('budgetName'))]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[format('Create-', parameters('subscriptionName'))]"
