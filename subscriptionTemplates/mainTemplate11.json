@@ -186,11 +186,8 @@
                 "mode": "Incremental",
                 "parameters": {
                     "subscriptionId": {
-                            // this cannot be referenced directly on the subscriptionId property of the deployment so needs to be nested one level
-                            "value": "[reference(resourceId('Microsoft.Resources/deployments', concat('Create-', 'Subscription'))).outputs.subscriptionId.value]"
-                    },
-                    "subscriptionName": {
-                        "value": "[parameters('subscriptionName')]"
+                        // this cannot be referenced directly on the subscriptionId property of the deployment so needs to be nested one level
+                        "value": "[reference(resourceId('Microsoft.Resources/deployments', concat('Create-', 'Subscription'))).outputs.subscriptionId.value]"
                     },
                     "budgetName": {
                         "value": "[parameters('budgetName')]"
