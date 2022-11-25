@@ -300,7 +300,7 @@
                             "toolTip": "The email address to send the budget notification to when the threshold is exceeded.",
                             "constraints": {
                                 "required": true,
-                                "regex": "^[a-z0-9]+@[a-z]+\\.[a-z]{2,3}$",
+                                "regex": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
                                 "validationMessage": "The e-mail address must be in user@domain.tld format"
                             },
                             "visible": true
