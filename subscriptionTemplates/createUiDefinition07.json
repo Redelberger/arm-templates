@@ -107,7 +107,7 @@
                             "type": "Microsoft.Common.DropDown",
                             "label": "Management Group",
                             "placeholder": "Select Management Group",
-                            "defaultValue": "[map(steps('basics').mgApi.value, (mg) => parse(concat('{\"label\":\"', mg.properties.displayName, '\",\"description\":\"', mg.id, '\",\"value\":\"', toLower(mg.name), '\"}')) )]",
+                            "defaultValue": "[steps('basics').resourceScope.managementGroup.id]",
                             "constraints": {
                                 "allowedValues": "[map(steps('lzSettings').mgApi.value, (mg) => parse(concat('{\"label\":\"', mg.properties.displayName, '\",\"description\":\"', mg.id, '\",\"value\":\"', toLower(mg.name), '\"}')) )]",
                                 "required": true
@@ -306,6 +306,15 @@
                                 "validationMessage": ""
                             },
                             "visible": true
+                        },
+                        {   "name": "contactEmail",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Contact Email",
+                            "placeholder": "Select Contact Email",
+                            "constraints": {
+                                "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.properties.displayName), '\"}')) )]",
+                                "required": true
+                            }
                         },
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
