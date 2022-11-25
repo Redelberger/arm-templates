@@ -1,19 +1,95 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
-    "view": {
-      "kind": "Form",
-      "properties": {
-        "title": "Test Form View",
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [
+            {}
+        ],
         "steps": [
-          {
-            "name": "basics",
-            "label": "Basics",
-            "elements": [
-            ]
-          }
-        ]
-      },
-      "outputs": {
-      }
+            {   "name": "lzSettings",
+                "label": "Create EA-Subscription",
+                "bladeTitle": "Create EA-Subscription",
+                "elements": [
+                    {   "name": "textBlock0",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": true,
+                        "options": {
+                            "text": "Select the billing account and enrollment account used for subscription provisioning.",
+                            "link": {
+                                "label": "Learn more",
+                                "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/enterprise-enrollment-and-azure-ad-tenants"
+                            }
+                        }
+                    },
+                    {   "name": "billingAccount",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Billing Account",
+                        "defaultValue": "79210419",
+                        "placeholder": "Billing Account..",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9A-Z-]{1,30}$",
+                                    "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                                }
+                            ]
+                        }
+                    },
+                    {   "name": "subscriptionName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subscription Name",
+                        "defaultValue": "SUB-AutoSub-DEV-001",
+                        "placeholder": "Subscription name..",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9A-Z-]{1,30}$",
+                                    "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                                }
+                            ]
+                        }
+                    },
+                    {   "name": "subscriptionOwnerId",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subscription Owner ID",
+                        "defaultValue": "user@domain.tld",
+                        "placeholder": "Subscription Owner ID..",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9]+@[a-z]+\\.[a-z]{2,3}$",
+                                    "message": "The e-mail address must be in user@domain.tld format."
+                                }
+                            ]
+                        }
+                    },
+                    {   "name": "managementGroupId",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Management Group ID",
+                        "defaultValue": "DEV-Test",
+                        "placeholder": "Subscription name..",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9A-Z-]{1,30}$",
+                                    "message": "Only alphanumeric characters and hyphens are allowed, and the value must be 1-30 characters long."
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "billingAccount": "[steps('lzSettings').billingAccount]",
+            "subscriptionName": "[steps('lzSettings').subscriptionName]",
+            "subscriptionOwnerId": "[steps('lzSettings').subscriptionOwnerId]",
+            "managementGroupId": "[steps('lzSettings').managementGroupId]"
+        }
     }
 }
