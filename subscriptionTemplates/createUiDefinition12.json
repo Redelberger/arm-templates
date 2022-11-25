@@ -8,8 +8,7 @@
                 {   "name": "basics",
                     "label": "Basics",
                     "elements": [
-                        {
-                            "name": "resourceScope",
+                        {   "name": "resourceScope",
                             "type": "Microsoft.Common.ResourceScope",
                             "location": {
                                 "resourceTypes": []
@@ -312,20 +311,20 @@
         },
         "outputs": {
             "parameters": {
-                "billingAccount": "[steps('basics').billingAccount]",
-                "subscriptionName": "[steps('basics').subscriptionName]",
+                "billingAccount": "[steps('lzSettings').billingAccount]",
+                "subscriptionName": "[steps('lzSettings').subscriptionName]",
                 "subscriptionOwnerId": "[steps('basics').subscriptionOwnerId]",
-                "managementGroupId": "[steps('basics').managementGroupId]",
-                "budgetName": "[steps('basics').budgetName]",
-                "amount": "[steps('basics').amount]",
-                "timeGrain": "[steps('basics').timeGrain]",
-                "startDate": "[steps('basics').startDate]",
-                "endDate": "[steps('basics').endDate]",
-                "firstThreshold": "[steps('basics').firstThreshold]",
-                "secondThreshold": "[steps('basics').secondThreshold]",
-                "contactRoles": "[steps('basics').contactRoles]",
-                "contactEmails": "[steps('basics').contactEmails]",
-                "groupObjectID": "[steps('basics').groupObjectID]"
+                "managementGroupId": "[steps('basics').resourceScope.managementGroup.id]",
+                "budgetName": "[steps('lzBudget').budgetName]",
+                "amount": "[steps('lzBudget').amount]",
+                "timeGrain": "[steps('lzBudget').timeGrain]",
+                "startDate": "[steps('lzBudget').startDate]",
+                "endDate": "[steps('lzBudget').endDate]",
+                "firstThreshold": "[steps('lzBudget').firstThreshold]",
+                "secondThreshold": "[steps('lzBudget').secondThreshold]",
+                "contactRoles": "[steps('lzBudget').contactRoles]",
+                "contactEmails": "[steps('lzBudget').contactEmails]",
+                "groupObjectID": "[steps('lzBudget').groupObjectID]"
             },
             "kind": "ManagementGroup",
             "location": "[steps('basics').resourceScope.location.name]",
