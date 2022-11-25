@@ -83,13 +83,7 @@
                 "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
             }
         },
-        "contactGroups": {
-            "type": "array",
-            "metadata": {
-                "description": "The list of action groups to send the budget notification to when the threshold is exceeded. It accepts array of strings."
-            }
-        },
-        "groupObejctID": {
+        "groupObjectID": {
             "type": "string",
             "defaultValue": "4b0f931c-24f6-4329-9cd1-40936c3ae843"
         }
@@ -134,8 +128,7 @@
                     "operator": "GreaterThan",
                     "threshold": "[parameters('firstThreshold')]",
                     "contactEmails": "[parameters('contactEmails')]",
-                    "contactRoles": "[parameters('contactRoles')]",
-                    "contactGroups": "[parameters('contactGroups')]"
+                    "contactRoles": "[parameters('contactRoles')]"
                     },
                     "NotificationForExceededBudget2": {
                     "enabled": true,
@@ -143,20 +136,9 @@
                     "threshold": "[parameters('secondThreshold')]",
                     "contactEmails": "[parameters('contactEmails')]",
                     "contactRoles": "[parameters('contactRoles')]",
-                    "contactGroups": "[parameters('contactGroups')]",
                     "thresholdType": "Forecasted"
                     }
                 }
-            }
-        },
-        {   "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2022-04-01",
-            "name": "[parameters('groupName')]",
-            "scope": "[concat('Microsoft.Subscription/aliases', '/', parameters('subscriptionName'))]",
-            "properties": {
-                "roleDefinitionId": "[reference('/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
-                "principalId": "[parameters('groupObejctID')]",
-                "principalType": "Group"
             }
         }
     ],
