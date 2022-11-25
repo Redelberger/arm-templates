@@ -276,7 +276,7 @@
                             }
                         },
                         "contactRoles": {
-                            "type": "string",
+                            "type": "array",
                             "metadata": {
                                 "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
                             }
