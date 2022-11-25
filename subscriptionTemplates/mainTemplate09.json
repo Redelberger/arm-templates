@@ -230,64 +230,58 @@
                                 "description": "Subscription ID to assign budget to"
                             }
                         },
-                        "subscriptionName": {
-                            "type": "string",
-                            "metadata": {
-                                "description": "Subscription Name to assign budget to"
-                            }
-                        },
                         "budgetName": {
                             "type": "string",
                             "metadata": {
-                                "description": "EnrollmentAccount used for subscription billing"
+                                "description": "Name of the Budget. It should be unique within a resource group."
                             }
                         },
                         "startDate": {
                             "type": "string",
                             "metadata": {
-                                "description": "managementGroupId to place subscription into"
+                                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
                             }
                         },
                         "endDate": {
                             "type": "string",
                             "metadata": {
-                                "description": "subscriptionOwnerId for the subscription"
+                                "description": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date."
                             }
                         },
                         "timeGrain": {
                             "type": "string",
                             "metadata": {
-                                "description": "contactEmails for Tagging the subscription"
+                                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
                             }
                         },
                         "amount": {
-                            "type": "string",
+                            "type": "int",
                             "metadata": {
-                                "description": "contactEmails for Tagging the subscription"
+                                "description": "The total amount of cost or usage to track with the budget"
                             }
                         },
                         "firstThreshold": {
-                            "type": "string",
+                            "type": "int",
                             "metadata": {
-                                "description": "contactEmails for Tagging the subscription"
+                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
                             }
                         },
                         "secondThreshold": {
-                            "type": "string",
+                            "type": "int",
                             "metadata": {
-                                "description": "contactEmails for Tagging the subscription"
+                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
                             }
                         },
                         "contactEmails": {
                             "type": "string",
                             "metadata": {
-                                "description": "contactEmails for Tagging the subscription"
+                                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
                             }
                         },
                         "contactRoles": {
                             "type": "string",
                             "metadata": {
-                                "description": "contactEmails for Tagging the subscription"
+                                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
                             }
                         }
                     },
