@@ -297,11 +297,11 @@
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Emails",
                             "defaultValue": "",
-                            "toolTip": "The list of email addresses to send the budget notification to when the threshold is exceeded.",
+                            "toolTip": "The email address to send the budget notification to when the threshold is exceeded.",
                             "constraints": {
                                 "required": true,
-                                "regex": "",
-                                "validationMessage": "The e-mail address must be in user@domain.tld format - regex '^[a-z0-9]+@[a-z]+\\.[a-z]{2,3}$'"
+                                "regex": "^[a-z0-9]+@[a-z]+\\.[a-z]{2,3}$",
+                                "validationMessage": "The e-mail address must be in user@domain.tld format"
                             },
                             "visible": true
                         }
