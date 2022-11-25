@@ -60,7 +60,7 @@
                                 "path": "[concat(steps('lzSettings').billingAccount, '/enrollmentAccounts/', '?api-version=2019-10-01-preview')]"
                             }
                         },
-                        {   "name": "esEa",
+                        {   "name": "eaEnrollmentAccount",
                             "type": "Microsoft.Common.DropDown",
                             "label": "Enrollment Account",
                             "toolTip": "",
@@ -91,7 +91,7 @@
                             "label": "Subscription Owner",
                             "placeholder": "Select Subscription Owner",
                             "constraints": {
-                                "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.id), '\"}')) )]",
+                                "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.properties.displayName), '\"}')) )]",
                                 "required": true
                             }
                         },
@@ -296,7 +296,7 @@
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Emails",
-                            "defaultValue": "",
+                            "defaultValue": "[steps('lzSettings').subscriptionOwnerId]",
                             "toolTip": "The email address to send the budget notification to when the threshold is exceeded.",
                             "constraints": {
                                 "required": true,
@@ -311,7 +311,7 @@
         },
         "outputs": {
             "parameters": {
-                "billingAccount": "[steps('lzSettings').billingAccount]",
+                "eaEnrollmentAccount": "[steps('lzSettings').eaEnrollmentAccount]",
                 "subscriptionName": "[steps('lzSettings').subscriptionName]",
                 "subscriptionOwnerId": "[steps('lzSettings').subscriptionOwnerId]",
                 "managementGroupId": "[steps('basics').resourceScope.managementGroup.id]",
