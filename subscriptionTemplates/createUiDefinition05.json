@@ -310,7 +310,7 @@
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Emails",
-                            "defaultValue": "[steps('lzSettings').subscriptionOwnerId]",
+                            "defaultValue": "[steps('lzSettings').subscriptionOwnerId.label]",
                             "toolTip": "The list of email addresses to send the budget notification to when the threshold is exceeded.",
                             "constraints": {
                                 "required": true,
