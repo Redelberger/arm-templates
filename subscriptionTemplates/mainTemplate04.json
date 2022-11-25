@@ -78,7 +78,7 @@
             }
         },
         "contactEmails": {
-            "type": "array",
+            "type": "string",
             "metadata": {
                 "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
             }
