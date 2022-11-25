@@ -46,7 +46,7 @@
                                 "path": "providers/Microsoft.Billing/billingAccounts?api-version=2020-05-01"
                             }
                         },
-                        {   "name": "esBillingAccount",
+                        {   "name": "billingAccount",
                             "type": "Microsoft.Common.DropDown",
                             "label": "Billing Account",
                             "toolTip": "",
@@ -94,7 +94,7 @@
                                 }
                             }
                         },
-                        {   "name": "subOwnerDropDown",
+                        {   "name": "subscriptionOwnerId",
                             "type": "Microsoft.Common.DropDown",
                             "label": "Subscription Owner",
                             "placeholder": "Select Subscription Owner",
@@ -103,7 +103,7 @@
                                 "required": true
                             }
                         },
-                        {   "name": "mgDropDown",
+                        {   "name": "managementGroupId",
                             "type": "Microsoft.Common.DropDown",
                             "label": "Management Group",
                             "placeholder": "Select Management Group",
@@ -295,21 +295,51 @@
                             },
                             "visible": true
                         },
+                        {   "name": "contactRoles",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Contact Roles",
+                            "defaultValue": "[[\"Owner\",\"Contributor\",\"Reader\"]",
+                            "toolTip": "The list of contact roles to send the budget notification to when the threshold is exceeded.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
-                            "label": "contactEmails",
-                            "defaultValue": "[steps('lzSettings').subOwnerDropDown]",
+                            "label": "Contact Emails",
+                            "defaultValue": "[steps('lzSettings').subscriptionOwnerId]",
                             "toolTip": "The list of email addresses to send the budget notification to when the threshold is exceeded.",
-                            "placeholder": "",
-                            "multiLine": false,
                             "constraints": {
-                            "required": true,
-                            "validations": [
-                                {
+                                "required": true,
                                 "regex": "^[a-z0-9]+@[a-z]+\\.[a-z]{2,3}$",
-                                "message": "The e-mail address must be in user@domain.tld format"
-                                }
-                            ]
+                                "validationMessage": "The e-mail address must be in user@domain.tld format"
+                            },
+                            "visible": true
+                        },
+                        {   "name": "contactGroups",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Contact Groups",
+                            "defaultValue": "",
+                            "toolTip": "The list of action groups to send the budget notification to when the threshold is exceeded. It accepts array of strings.",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {   "name": "groupObejctID",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Group Obejct ID",
+                            "defaultValue": "4b0f931c-24f6-4329-9cd1-40936c3ae843",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
                             },
                             "visible": true
                         }
