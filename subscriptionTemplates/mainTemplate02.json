@@ -82,10 +82,6 @@
             "metadata": {
                 "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
             }
-        },
-        "groupObjectID": {
-            "type": "string",
-            "defaultValue": "4b0f931c-24f6-4329-9cd1-40936c3ae843"
         }
     },
     "variables": {
