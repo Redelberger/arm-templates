@@ -176,6 +176,7 @@
             "apiVersion": "2020-10-01",
             "name": "Create-Budget",
             "location": "[deployment().location]",
+            "subscriptionId": "[reference(resourceId('Microsoft.Resources/deployments', concat('Create-', 'Subscription'))).outputs.subscriptionId.value]",
             "dependsOn": [
                 "Create-Subscription"
             ],
@@ -185,10 +186,6 @@
                 },
                 "mode": "Incremental",
                 "parameters": {
-                    "subscriptionId": {
-                        // this cannot be referenced directly on the subscriptionId property of the deployment so needs to be nested one level
-                        "value": "[reference(resourceId('Microsoft.Resources/deployments', concat('Create-', 'Subscription'))).outputs.subscriptionId.value]"
-                    },
                     "budgetName": {
                         "value": "[parameters('budgetName')]"
                     },
@@ -221,12 +218,6 @@
                     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {
-                        "subscriptionId": {
-                            "type": "string",
-                            "metadata": {
-                                "description": "Subscription ID to assign budget to"
-                            }
-                        },
                         "budgetName": {
                             "type": "string",
                             "metadata": {
@@ -286,7 +277,6 @@
                         {   "type": "Microsoft.Consumption/budgets",
                             "apiVersion": "2021-10-01",
                             "name": "[parameters('budgetName')]",
-                            "scope": "[parameters('subscriptionId')]",
                             "properties": {
                                 "timePeriod": {
                                     "startDate": "[parameters('startDate')]",
