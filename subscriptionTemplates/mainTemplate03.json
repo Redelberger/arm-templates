@@ -6,7 +6,7 @@
             "type": "string"
         },
         "subscriptionName": {
-            "type": "array"
+            "type": "string"
         },
         "subscriptionOwnerId": {
             "type": "string"
