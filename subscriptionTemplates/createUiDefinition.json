@@ -1,46 +1,253 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
-    "handler": "Microsoft.Azure.CreateUIDef",
-    "version": "0.1.2-preview",
-    "parameters": {
-      "basics": [
-        {}
-      ],
-      "steps": [
-        {
-          "name": "storageConfig",
-          "label": "Storage settings",
-          "subLabel": {
-            "preValidation": "Configure the infrastructure settings",
-            "postValidation": "Done"
-          },
-          "bladeTitle": "Storage settings",
-          "elements": [
-            {
-              "name": "storageAccounts",
-              "type": "Microsoft.Storage.MultiStorageAccountCombo",
-              "label": {
-                "prefix": "Storage account name prefix",
-                "type": "Storage account type"
-              },
-              "defaultValue": {
-                "type": "Standard_LRS"
-              },
-              "constraints": {
-                "allowedTypes": [
-                  "Premium_LRS",
-                  "Standard_LRS",
-                  "Standard_GRS"
-                ]
-              }
-            }
-          ]
+    "$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
+    "view": {
+        "kind": "Form",
+        "properties": {
+            "title": "Test Form View",
+            "steps": [
+                {
+                    "name": "basics",
+                    "label": "Basics",
+                    "elements": [
+                        {
+                            "name": "resourceScope",
+                            "type": "Microsoft.Common.ResourceScope",
+                            "location": {
+                                "resourceTypes": []
+                            }
+                        },
+                        {
+                            "name": "billingAccount",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Billing Account",
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "subscriptionName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Subscription Name",
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "subscriptionOwnerId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Subscription Owner Id",
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "managementGroupId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Management Group Id",
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "budgetName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Budget Name",
+                            "defaultValue": "MyBudget",
+                            "toolTip": "Name of the Budget. It should be unique within a resource group.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "amount",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Amount",
+                            "defaultValue": "1000",
+                            "toolTip": "The total amount of cost or usage to track with the budget",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "timeGrain",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Time Grain",
+                            "defaultValue": "Monthly",
+                            "toolTip": "The time covered by a budget. Tracking of the amount will be reset based on the time grain.",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Monthly",
+                                        "value": "Monthly"
+                                    },
+                                    {
+                                        "label": "Quarterly",
+                                        "value": "Quarterly"
+                                    },
+                                    {
+                                        "label": "Annually",
+                                        "value": "Annually"
+                                    }
+                                ]
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "startDate",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Start Date",
+                            "defaultValue": "",
+                            "toolTip": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod.",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "endDate",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "End Date",
+                            "defaultValue": "",
+                            "toolTip": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date.",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "firstThreshold",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "First Threshold",
+                            "defaultValue": "90",
+                            "toolTip": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "secondThreshold",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Second Threshold",
+                            "defaultValue": "110",
+                            "toolTip": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "contactRoles",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Contact Roles",
+                            "defaultValue": "[[\"Owner\",\"Contributor\",\"Reader\"]",
+                            "toolTip": "The list of contact roles to send the budget notification to when the threshold is exceeded.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "contactEmails",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Contact Emails",
+                            "defaultValue": "",
+                            "toolTip": "The list of email addresses to send the budget notification to when the threshold is exceeded.",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "contactGroups",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Contact Groups",
+                            "defaultValue": "",
+                            "toolTip": "The list of action groups to send the budget notification to when the threshold is exceeded. It accepts array of strings.",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "groupObejctID",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Group Obejct ID",
+                            "defaultValue": "4b0f931c-24f6-4329-9cd1-40936c3ae843",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "outputs": {
+            "parameters": {
+                "billingAccount": "[steps('basics').billingAccount]",
+                "subscriptionName": "[steps('basics').subscriptionName]",
+                "subscriptionOwnerId": "[steps('basics').subscriptionOwnerId]",
+                "managementGroupId": "[steps('basics').managementGroupId]",
+                "budgetName": "[steps('basics').budgetName]",
+                "amount": "[steps('basics').amount]",
+                "timeGrain": "[steps('basics').timeGrain]",
+                "startDate": "[steps('basics').startDate]",
+                "endDate": "[steps('basics').endDate]",
+                "firstThreshold": "[steps('basics').firstThreshold]",
+                "secondThreshold": "[steps('basics').secondThreshold]",
+                "contactRoles": "[steps('basics').contactRoles]",
+                "contactEmails": "[steps('basics').contactEmails]",
+                "contactGroups": "[steps('basics').contactGroups]",
+                "groupObejctID": "[steps('basics').groupObejctID]"
+            },
+            "kind": "ManagementGroup",
+            "location": "[steps('basics').resourceScope.location.name]",
+            "managementGroupId": "[steps('basics').resourceScope.managementGroup.id]"
         }
-      ],
-      "outputs": {
-        "storageAccountNamePrefix": "[steps('storageConfig').storageAccounts.prefix]",
-        "storageAccountType": "[steps('storageConfig').storageAccounts.type]",
-        "location": "[location()]"
-      }
     }
-  }
+}
