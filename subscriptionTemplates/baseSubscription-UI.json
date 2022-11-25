@@ -21,85 +21,19 @@
                             }
                         }
                     },
-                    {   "name": "mgApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "providers/Microsoft.Management/managementGroups?api-version=2020-02-01"
-                        }
-                    },
-                    {   "name": "esBillingApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "providers/Microsoft.Billing/billingAccounts?api-version=2020-05-01"
-                        }
-                    },
-                    {   "name": "esBillingAccount",
-                        "type": "Microsoft.Common.DropDown",
+                    {   "name": "billingAccount",
+                        "type": "Microsoft.Common.TextBox",
                         "label": "Billing Account",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": true,
+                        "defaultValue": "79210419",
+                        "placeholder": "Billing Account..",
                         "constraints": {
-                            "allowedValues": "[map(steps('lzSettings').esBillingApi.value, (billing) => parse(concat('{\"label\":\"', billing.properties.displayName, '\",\"description\":\"', billing.id, '\",\"value\":\"', toLower(billing.id), '\"}')) )]",
-                            "required": true
-                        }
-                    },
-                    {   "name": "esEaApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "[concat(steps('lzSettings').esBillingAccount, '/enrollmentAccounts/', '?api-version=2019-10-01-preview')]"
-                        }
-                    },
-                    {   "name": "esEa",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Enrollment Account",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": true,
-                        "constraints": {
-                            "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.id), '\"}')) )]",
-                            "required": true
-                        }
-                    },
-                    {	"name": "textBlock1",
-                        "type": "Microsoft.Common.TextBlock",
-                        "visible": true,
-                        "options": {
-                            "text": "Select subscription owner and target management group for the subscription you will create",
-                            "link": {
-                                "label": "Learn more",
-                                "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/management-group-and-subscription-organization"
-                            }
-                        }
-                    },
-                    {   "name": "subOwnerDropDown",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Subscription Owner",
-                        "placeholder": "Select Subscription Owner",
-                        "constraints": {
-                            "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.id), '\"}')) )]",
-                            "required": true
-                        }
-                    },
-                    {   "name": "mgDropDown",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Management Group",
-                        "placeholder": "Select Management Group",
-                        "defaultValue": "[map(steps('basics').mgApi.value, (mg) => parse(concat('{\"label\":\"', mg.properties.displayName, '\",\"description\":\"', mg.id, '\",\"value\":\"', toLower(mg.name), '\"}')) )]",
-                        "constraints": {
-                            "allowedValues": "[map(steps('lzSettings').mgApi.value, (mg) => parse(concat('{\"label\":\"', mg.properties.displayName, '\",\"description\":\"', mg.id, '\",\"value\":\"', toLower(mg.name), '\"}')) )]",
-                            "required": true
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9A-Z-]{1,30}$",
+                                    "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                                }
+                            ]
                         }
                     },
                     {   "name": "subscriptionName",
@@ -116,15 +50,45 @@
                                 }
                             ]
                         }
+                    },
+                    {   "name": "subscriptionOwnerId",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subscription Owner ID",
+                        "defaultValue": "user@domain.tld",
+                        "placeholder": "Subscription Owner ID..",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9]+@[a-z]+\\.[a-z]{2,3}$",
+                                    "message": "The e-mail address must be in user@domain.tld format."
+                                }
+                            ]
+                        }
+                    },
+                    {   "name": "managementGroupId",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Management Group ID",
+                        "defaultValue": "DEV-Test",
+                        "placeholder": "Subscription name..",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9A-Z-]{1,30}$",
+                                    "message": "Only alphanumeric characters and hyphens are allowed, and the value must be 1-30 characters long."
+                                }
+                            ]
+                        }
                     }
                 ]
             }
         ],
         "outputs": {
-            "billingAccount": "[steps('lzSettings').esEa]",
+            "billingAccount": "[steps('lzSettings').billingAccount]",
             "subscriptionName": "[steps('lzSettings').subscriptionName]",
-            "subscriptionOwnerId": "[steps('lzSettings').subOwnerDropDown]",
-            "managementGroupId": "[steps('lzSettings').mgDropDown]"
+            "subscriptionOwnerId": "[steps('lzSettings').subscriptionOwnerId]",
+            "managementGroupId": "[steps('lzSettings').managementGroupId]"
         }
     }
 }
