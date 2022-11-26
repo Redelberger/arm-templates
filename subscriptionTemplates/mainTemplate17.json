@@ -176,7 +176,7 @@
             "apiVersion": "2020-10-01",
             "name": "Create-Budget",
             "location": "[deployment().location]",
-            // "subscriptionId": "[reference(tenantResourceId('Microsoft.Subscription/aliases', parameters('subscriptionName'))).subscriptionId]",
+            "subscriptionId": "f3aa5024-bae8-4faf-8128-a3a4d4a37c39",
             "dependsOn": [
                 "Create-Subscription"
             ],
@@ -186,9 +186,6 @@
                 },
                 "mode": "Incremental",
                 "parameters": {
-                    "subscriptionName": {
-                        "value": "[parameters('subscriptionName')]"
-                    },
                     "budgetName": {
                         "value": "[parameters('budgetName')]"
                     },
@@ -221,12 +218,6 @@
                     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {
-                        "subscriptionName": {
-                            "type": "string",
-                            "metadata": {
-                                "description": "Name of the Subscription."
-                            }
-                        },
                         "budgetName": {
                             "type": "string",
                             "metadata": {
@@ -286,7 +277,6 @@
                         {   "type": "Microsoft.Consumption/budgets",
                             "apiVersion": "2021-10-01",
                             "name": "[parameters('budgetName')]",
-                            "scope": "[concat('Microsoft.Subscription/aliases', '/', parameters('subscriptionName'))]",
                             "properties": {
                                 "timePeriod": {
                                     "startDate": "[parameters('startDate')]",
