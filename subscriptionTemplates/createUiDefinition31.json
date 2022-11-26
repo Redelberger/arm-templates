@@ -296,7 +296,7 @@
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Emails",
-                            "defaultValue": "[concat('\"', steps('lzSettings').subscriptionOwnerId, '\"']",
+                            "defaultValue": "[steps('lzSettings').subscriptionOwnerId]",
                             "toolTip": "The email address to send the budget notification to when the threshold is exceeded. Expected format is [\"user1@domain.com\",\"user2@domain.com\"]",
                             "constraints": {
                                 "required": true,
