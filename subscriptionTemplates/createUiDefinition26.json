@@ -226,7 +226,7 @@
                         {   "name": "endDate",
                             "type": "Microsoft.Common.TextBox",
                             "label": "endDate",
-                            "defaultValue": "[concat(substring((addHours(utcNow(), 8760))), 0,8), '01')]",
+                            "defaultValue": "[concat(substring(addHours(utcNow(), 8760), 0,8), '01')]",
                             "toolTip": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date.",
                             "placeholder": "",
                             "multiLine": false,
