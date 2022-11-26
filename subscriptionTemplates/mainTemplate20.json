@@ -108,9 +108,6 @@
                     },
                     "managementGroupId": {
                         "value": "[parameters('managementGroupId')]"
-                    },
-                    "contactEmails": {
-                        "value": "[parameters('contactEmails')]"
                     }
                 },
                 "template": {
@@ -140,12 +137,6 @@
                             "metadata": {
                                 "description": "managementGroupId to place subscription into"
                             }
-                        },
-                        "contactEmails": {
-                            "type": "array",
-                            "metadata": {
-                                "description": "contactEmails for Tagging the subscription"
-                            }
                         }
                     },
                     "resources": [
@@ -159,7 +150,7 @@
                                 "billingScope": "[parameters('eaEnrollmentAccount')]",
                                 "managementGroupId": "[parameters('managementGroupId')]",
                                 "subscriptionOwnerId": "[parameters('subscriptionOwnerId')]",
-                                "tags": "[concat('Ansprechpartner:', parameters('contactEmails'))]"
+                                "tags": "[concat('Ansprechpartner:', parameters('subscriptionOwnerId'))]"
                             }
                         }
                     ],
