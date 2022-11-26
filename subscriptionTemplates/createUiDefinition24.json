@@ -208,7 +208,7 @@
                         {   "name": "startDate",
                             "type": "Microsoft.Common.TextBox",
                             "label": "startDate",
-                            "defaultValue": "[utcNow()]",
+                            "defaultValue": "[concat(substring(utcNow(), 1,8), '01')]",
                             "toolTip": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod.",
                             "placeholder": "",
                             "multiLine": false,
