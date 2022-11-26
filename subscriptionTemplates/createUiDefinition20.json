@@ -226,7 +226,7 @@
                         {   "name": "endDate",
                             "type": "Microsoft.Common.TextBox",
                             "label": "endDate",
-                            "defaultValue": "[addHours('1990-12-31T23:59:59Z', 8760)]",
+                            "defaultValue": "[addHours(utcNow(), 8760)]",
                             "toolTip": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date.",
                             "placeholder": "",
                             "multiLine": false,
