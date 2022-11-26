@@ -296,12 +296,12 @@
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Emails",
-                            "defaultValue": "[steps('lzSettings').subscriptionOwnerId]",
-                            "toolTip": "The email address to send the budget notification to when the threshold is exceeded.",
+                            "defaultValue": "concat('[\"', [steps('lzSettings').subscriptionOwnerId], '\"]'",
+                            "toolTip": "The email address to send the budget notification to when the threshold is exceeded. Expected format is [\"user1@domain.com\",\"user2@domain.com\"]",
                             "constraints": {
                                 "required": true,
                                 "regex": "",
-                                "validationMessage": "The e-mail address must be in user@domain.tld format"
+                                "validationMessage": "The e-mail addresses must be in the format of [\"user1@domain.com\",\"user2@domain.com\"]"
                             },
                             "visible": true
                         }
