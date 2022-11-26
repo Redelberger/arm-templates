@@ -78,7 +78,7 @@
             }
         },
         "contactEmails": {
-            "type": "string",
+            "type": "array",
             "metadata": {
                 "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
             }
@@ -142,7 +142,7 @@
                             }
                         },
                         "contactEmails": {
-                            "type": "string",
+                            "type": "array",
                             "metadata": {
                                 "description": "contactEmails for Tagging the subscription"
                             }
@@ -261,7 +261,7 @@
                             }
                         },
                         "contactEmails": {
-                            "type": "string",
+                            "type": "array",
                             "metadata": {
                                 "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
                             }
