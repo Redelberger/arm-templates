@@ -710,9 +710,65 @@
                         },
                         {   "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2020-10-01",
-                            "name": "[format('Create-{0}', parameters('vmName'))]",
+                            "name": "Create-NetworkRG",
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "location": "[deployment().location]",
+                            "properties": {
+                                "expressionEvaluationOptions": {
+                                    "scope": "inner"
+                                },
+                                "mode": "Incremental",
+                                "parameters": {},
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {},
+                                    "resources": [
+                                        {   "type": "Microsoft.Resources/resourceGroups",
+                                            "apiVersion": "2018-05-01",
+                                            "location": "[deployment().location]",
+                                            "name": "rg-network",
+                                            "properties": {}
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {   "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-10-01",
+                            "name": "Create-VmRG",
+                            "subscriptionId": "[parameters('subscriptionId')]",
+                            "location": "[deployment().location]",
+                            "properties": {
+                                "expressionEvaluationOptions": {
+                                    "scope": "inner"
+                                },
+                                "mode": "Incremental",
+                                "parameters": {},
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {},
+                                    "resources": [
+                                        {   "type": "Microsoft.Resources/resourceGroups",
+                                            "apiVersion": "2018-05-01",
+                                            "location": "[deployment().location]",
+                                            "name": "rg-virtualmachines",
+                                            "properties": {}
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {   "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-10-01",
+                            "name": "[format('Create-{0}', parameters('vmName'))]",
+                            "subscriptionId": "[parameters('subscriptionId')]",
+                            "resourceGroup": "rg-virtualmachines",
+                            "location": "[deployment().location]",
+                            "dependsOn": [
+                                "Create-VmRG"
+                            ],
                             "properties": {
                                 "expressionEvaluationOptions": {
                                     "scope": "inner"
@@ -946,7 +1002,7 @@
                                             "location": "[deployment().location]",
                                             "properties": {
                                                 "hardwareProfile": {
-                                                "vmSize": "[parameters('vmSize')]"
+                                                    "vmSize": "[parameters('vmSize')]"
                                                 },
                                                 "osProfile": {
                                                 "computerName": "[parameters('vmName')]",
@@ -954,33 +1010,33 @@
                                                 "adminPassword": "[parameters('adminPassword')]"
                                                 },
                                                 "storageProfile": {
-                                                "imageReference": {
-                                                    "publisher": "[variables('imagePublisher')]",
-                                                    "offer": "[variables('imageOffer')]",
-                                                    "sku": "[parameters('windowsOSVersion')]",
-                                                    "version": "latest"
-                                                },
-                                                "osDisk": {
-                                                    "name": "[format('{0}-OsDisk', parameters('vmName'))]",
-                                                    "caching": "ReadWrite",
-                                                    "createOption": "FromImage"
-                                                },
-                                                "dataDisks": [
-                                                    {
-                                                    "name": "[format('{0}-DataDisk', parameters('vmName'))]",
-                                                    "caching": "None",
-                                                    "createOption": "Empty",
-                                                    "diskSizeGB": 1024,
-                                                    "lun": 0
-                                                    }
-                                                ]
+                                                    "imageReference": {
+                                                        "publisher": "[variables('imagePublisher')]",
+                                                        "offer": "[variables('imageOffer')]",
+                                                        "sku": "[parameters('windowsOSVersion')]",
+                                                        "version": "latest"
+                                                    },
+                                                    "osDisk": {
+                                                        "name": "[format('{0}-OsDisk', parameters('vmName'))]",
+                                                        "caching": "ReadWrite",
+                                                        "createOption": "FromImage"
+                                                    },
+                                                    "dataDisks": [
+                                                        {
+                                                        "name": "[format('{0}-DataDisk', parameters('vmName'))]",
+                                                        "caching": "None",
+                                                        "createOption": "Empty",
+                                                        "diskSizeGB": 1024,
+                                                        "lun": 0
+                                                        }
+                                                    ]
                                                 },
                                                 "networkProfile": {
-                                                "networkInterfaces": [
-                                                    {
-                                                    "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
-                                                    }
-                                                ]
+                                                    "networkInterfaces": [
+                                                        {
+                                                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                                                        }
+                                                    ]
                                                 },
                                                 "diagnosticsProfile": {
                                                 "bootDiagnostics": {
