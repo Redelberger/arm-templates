@@ -118,39 +118,18 @@
                 "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2012-R2-Datacenter, 2016-Datacenter, 2019-Datacenter, 2022-Datacenter."
             }
         },
-        "defaultNetworkRG": {
-            "type": "string",
-            "defaultValue": "rg-network",
-            "metadata": {
-                "description": "Change, if required the name of the default Network Resource Group"
-            }
-        },
         "defaultVnetName": {
             "type": "string",
-            "defaultValue": "[concat('vnet-',parameters('defaultSubscriptionName'))]",
+            "defaultValue": "[concat('vnet-', parameters('subscriptionName'))]",
             "metadata": {
                 "description": "Change, if required the name of the default Vnet Name"
             }
         },
         "defaultSubnetName": {
             "type": "string",
-            "defaultValue": "[concat('subnet-',parameters('defaultSubscriptionName'))]",
+            "defaultValue": "[concat('subnet-', parameters('subscriptionName'))]",
             "metadata": {
                 "description": "Change, if required the name of the default Subnet Name"
-            }
-        },
-        "existingVnetId": {
-            "type": "string",
-            "defaultValue": "[resourceId(parameters('defaultNetworkRG'), 'Microsoft.Network/virtualNetworks', parameters('defaultVnetName'))]",
-            "metadata": {
-                "description": "Existing VNET that has access to the domain controllers"
-            }
-        },
-        "existingSubnetId": {
-            "type": "string",
-            "defaultValue": "[resourceId('rg-network', 'Microsoft.Network/virtualNetworks/subnets', parameters('defaultVnetName'), parameters('defaultSubnetName'))]",
-            "metadata": {
-                "description": "Existing subnet that has access to the domain controllers"
             }
         },
         "vmName": {
@@ -223,37 +202,23 @@
                 "description": "The name of the storage account."
             }
         },
-        "defaultSubscriptionName": {
+        "defaultNetworkRG": {
             "type": "string",
-            "defaultValue": "[subscription().displayName]",
+            "defaultValue": "rg-network",
             "metadata": {
-                "description": "Change, if required the name of the default Subscription Name"
+                "description": "Change, if required the name of the default Network Resource Group"
             }
         },
         "defaultNsgName": {
             "type": "string",
-            "defaultValue": "[concat('nsg-',parameters('defaultSubscriptionName'))]",
+            "defaultValue": "[concat('nsg-',parameters('subscriptionName'))]",
             "metadata": {
             "displayName": "Change, if required the name of the default Network Security Group (NSG)"
             }
         },
-        "defaultVnetName": {
-            "type": "string",
-            "defaultValue": "[concat('vnet-',parameters('defaultSubscriptionName'))]",
-            "metadata": {
-            "displayName": "Change, if required the name of the default Virtual Network"
-            }
-        },
-        "defaultSubnetName": {
-            "type": "string",
-            "defaultValue": "[concat('subnet-',parameters('defaultSubscriptionName'))]",
-            "metadata": {
-            "description": "Change, if required the name of the default Subnet Name"
-            }
-        },
         "defaultRoutingTableName": {
             "type": "string",
-            "defaultValue": "[concat('rt-',parameters('defaultSubscriptionName'))]",
+            "defaultValue": "[concat('rt-',parameters('subscriptionName'))]",
             "metadata": {
             "description": "Change, if required the name of the default Routing Table Name"
             }
@@ -402,14 +367,11 @@
                     "contactRoles": {
                         "value": "[parameters('contactRoles')]"
                     },
-                    "vmSize": {
-                        "value": "[parameters('vmSize')]"
-                    },
-                    "windowsOSVersion": {
-                        "value": "[parameters('windowsOSVersion')]"
-                    },
                     "defaultNetworkRG": {
                         "value": "[parameters('defaultNetworkRG')]"
+                    },
+                    "defaultNsgName": {
+                        "value": "[parameters('defaultNsgName')]"
                     },
                     "defaultVnetName": {
                         "value": "[parameters('defaultVnetName')]"
@@ -417,11 +379,23 @@
                     "defaultSubnetName": {
                         "value": "[parameters('defaultSubnetName')]"
                     },
-                    "existingVnetId": {
-                        "value": "[parameters('existingVnetId')]"
+                    "defaultRoutingTableName": {
+                        "value": "[parameters('defaultRoutingTableName')]"
                     },
-                    "existingSubnetId": {
-                        "value": "[parameters('existingSubnetId')]"
+                    "addressSpaceVnet": {
+                        "value": "[parameters('addressSpaceVnet')]"
+                    },
+                    "addressSpaceSubnet": {
+                        "value": "[parameters('addressSpaceSubnet')]"
+                    },
+                    "nextHopIpAddress": {
+                        "value": "[parameters('nextHopIpAddress')]"
+                    },
+                    "vmSize": {
+                        "value": "[parameters('vmSize')]"
+                    },
+                    "windowsOSVersion": {
+                        "value": "[parameters('windowsOSVersion')]"
                     },
                     "vmName": {
                         "value": "[parameters('vmName')]"
@@ -452,27 +426,6 @@
                     },
                     "storageAccountName": {
                         "value": "[parameters('storageAccountName')]"
-                    },
-                    "defaultNsgName": {
-                        "value": "[parameters('defaultNsgName')]"
-                    },
-                    "defaultVnetName": {
-                        "value": "[parameters('defaultVnetName')]"
-                    },
-                    "defaultSubnetName": {
-                        "value": "[parameters('defaultSubnetName')]"
-                    },
-                    "defaultRoutingTableName": {
-                        "value": "[parameters('defaultRoutingTableName')]"
-                    },
-                    "addressSpaceVnet": {
-                        "value": "[parameters('addressSpaceVnet')]"
-                    },
-                    "addressSpaceSubnet": {
-                        "value": "[parameters('addressSpaceSubnet')]"
-                    },
-                    "nextHopIpAddress": {
-                        "value": "[parameters('nextHopIpAddress')]"
                     }
                 },
                 "template": {
@@ -539,22 +492,16 @@
                                 "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
                             }
                         },
-                        "vmSize": {
-                            "type": "string",
-                            "metadata": {
-                                "description": "Size of VM"
-                            }
-                        },
-                        "windowsOSVersion": {
-                            "type": "string",
-                            "metadata": {
-                                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2012-R2-Datacenter, 2016-Datacenter, 2019-Datacenter, 2022-Datacenter."
-                            }
-                        },
                         "defaultNetworkRG": {
                             "type": "string",
                             "metadata": {
                                 "description": "Change, if required the name of the default Network Resource Group"
+                            }
+                        },
+                        "defaultNsgName": {
+                            "type": "string",
+                            "metadata": {
+                                "displayName": "Change, if required the name of the default Network Security Group (NSG)"
                             }
                         },
                         "defaultVnetName": {
@@ -569,16 +516,31 @@
                                 "description": "Change, if required the name of the default Subnet Name"
                             }
                         },
-                        "existingVnetId": {
+                        "defaultRoutingTableName": {
                             "type": "string",
                             "metadata": {
-                                "description": "Existing VNET that has access to the domain controllers"
+                                "description": "Change, if required the name of the default Routing Table Name"
                             }
                         },
-                        "existingSubnetId": {
+                        "addressSpaceVnet": {
+                            "type": "string"
+                        },
+                        "addressSpaceSubnet": {
+                            "type": "string"
+                        },
+                        "nextHopIpAddress": {
+                            "type": "string"
+                        },
+                        "vmSize": {
                             "type": "string",
                             "metadata": {
-                                "description": "Existing subnet that has access to the domain controllers"
+                                "description": "Size of VM"
+                            }
+                        },
+                        "windowsOSVersion": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2012-R2-Datacenter, 2016-Datacenter, 2019-Datacenter, 2022-Datacenter."
                             }
                         },
                         "vmName": {
@@ -640,39 +602,6 @@
                             "metadata": {
                                 "description": "The name of the storage account."
                             }
-                        },
-                        "defaultNsgName": {
-                            "type": "string",
-                            "metadata": {
-                                "displayName": "Change, if required the name of the default Network Security Group (NSG)"
-                            }
-                        },
-                        "defaultVnetName": {
-                            "type": "string",
-                            "metadata": {
-                                "displayName": "Change, if required the name of the default Virtual Network"
-                            }
-                        },
-                        "defaultSubnetName": {
-                            "type": "string",
-                            "metadata": {
-                                "description": "Change, if required the name of the default Subnet Name"
-                            }
-                        },
-                        "defaultRoutingTableName": {
-                            "type": "string",
-                            "metadata": {
-                                "description": "Change, if required the name of the default Routing Table Name"
-                            }
-                        },
-                        "addressSpaceVnet": {
-                            "type": "string"
-                        },
-                        "addressSpaceSubnet": {
-                            "type": "string"
-                        },
-                        "nextHopIpAddress": {
-                            "type": "string"
                         }
                     },
                     "resources": [
@@ -865,7 +794,7 @@
                             "apiVersion": "2020-10-01",
                             "name": "Create-Network",
                             "subscriptionId": "[parameters('subscriptionId')]",
-                            "resourceGroup": "rg-network",
+                            "resourceGroup": "[parameters('defaultNetworkRG')]",
                             "dependsOn": [
                                 "Create-NetworkRG"
                             ],
@@ -1061,12 +990,6 @@
                                     "defaultSubnetName": {
                                         "value": "[parameters('defaultSubnetName')]"
                                     },
-                                    "existingVnetId": {
-                                        "value": "[parameters('existingVnetId')]"
-                                    },
-                                    "existingSubnetId": {
-                                        "value": "[parameters('existingSubnetId')]"
-                                    },
                                     "vmName": {
                                         "value": "[parameters('vmName')]"
                                     },
@@ -1142,30 +1065,16 @@
                                         },
                                         "defaultVnetName": {
                                             "type": "string",
-                                            "defaultValue": "[concat('vnet-',parameters('defaultSubscriptionName'))]",
+                                            "defaultValue": "[concat('vnet-',parameters('subscriptionName'))]",
                                             "metadata": {
                                                 "description": "Change, if required the name of the default Vnet Name"
                                             }
                                         },
                                         "defaultSubnetName": {
                                             "type": "string",
-                                            "defaultValue": "[concat('subnet-',parameters('defaultSubscriptionName'))]",
+                                            "defaultValue": "[concat('subnet-',parameters('subscriptionName'))]",
                                             "metadata": {
                                                 "description": "Change, if required the name of the default Subnet Name"
-                                            }
-                                        },
-                                        "existingVnetId": {
-                                            "type": "string",
-                                            "defaultValue": "[resourceId(parameters('defaultNetworkRG'), 'Microsoft.Network/virtualNetworks', parameters('defaultVnetName'))]",
-                                            "metadata": {
-                                                "description": "Existing VNET that has access to the domain controllers"
-                                            }
-                                        },
-                                        "existingSubnetId": {
-                                            "type": "string",
-                                            "defaultValue": "[resourceId('rg-network', 'Microsoft.Network/virtualNetworks/subnets', parameters('defaultVnetName'), parameters('defaultSubnetName'))]",
-                                            "metadata": {
-                                                "description": "Existing subnet that has access to the domain controllers"
                                             }
                                         },
                                         "vmName": {
@@ -1266,7 +1175,7 @@
                                                     "properties": {
                                                         "privateIPAllocationMethod": "Dynamic",
                                                         "subnet": {
-                                                            "id": "[parameters('existingSubnetId')]"
+                                                            "id": "[resourceId(parameters('defaultNetworkRG'), 'Microsoft.Network/virtualNetworks/subnets', parameters('defaultVnetName'), parameters('defaultSubnetName'))]"
                                                         }
                                                     }
                                                 }
