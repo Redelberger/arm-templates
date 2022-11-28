@@ -350,6 +350,96 @@
                         }
                     ]
                 },
+                {   "name": "NetworkSettings",
+                    "label": "Provide Network Settings",
+                    "bladeTitle": "Provide Network Settings",
+                    "elements": [
+                        {   "name": "defaultNsgName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Default Nsg Name",
+                            "defaultValue": "[concat('nsg-',steps('SubscriptionSettings').subscriptionName)]",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {   "name": "defaultVnetName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Default Vnet Name",
+                            "defaultValue": "[concat('vnet-',steps('SubscriptionSettings').subscriptionName)]",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {   "name": "defaultSubnetName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Default Subnet Name",
+                            "defaultValue": "[concat('subnet-',steps('SubscriptionSettings').subscriptionName)]",
+                            "toolTip": "Change, if required the name of the default Subnet Name",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {   "name": "defaultRoutingTableName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Default Routing Table Name",
+                            "defaultValue": "[concat('rt-',steps('SubscriptionSettings').subscriptionName)]",
+                            "toolTip": "Change, if required the name of the default Routing Table Name",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {   "name": "addressSpaceVnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Address Space Vnet",
+                            "defaultValue": "172.28.62.64/28",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {   "name": "addressSpaceSubnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Address Space Subnet",
+                            "defaultValue": "172.28.62.64/28",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {   "name": "nextHopIpAddress",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Next Hop Ip Address",
+                            "defaultValue": "172.28.63.164",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        }
+                    ]
+                },
                 {   "name": "VmSettings",
                     "label": "Create VM",
                     "bladeTitle": "Create VM",
