@@ -5,7 +5,18 @@
         "eaEnrollmentAccount": {
             "type": "string"
         },
+        "Workload": {
+            "type": "string",
+            "defaultValue": "Production",
+            "allowedValues": [
+                "Production",
+                "DevTest"
+            ]
+        },
         "subscriptionName": {
+            "type": "string"
+        },
+        "subscriptionOwnerGroup": {
             "type": "string"
         },
         "subscriptionOwnerId": {
@@ -100,6 +111,9 @@
                     "eaEnrollmentAccount": {
                         "value": "[parameters('eaEnrollmentAccount')]"
                     },
+                    "Workload": {
+                        "value": "[parameters('Workload')]"
+                    },
                     "subscriptionName": {
                         "value": "[parameters('subscriptionName')]"
                     },
@@ -118,6 +132,12 @@
                             "type": "string",
                             "metadata": {
                                 "description": "EnrollmentAccount used for subscription billing"
+                            }
+                        },
+                        "Workload": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The workload type of the subscription. It can be either Production or DevTest."
                             }
                         },
                         "subscriptionName": {
@@ -145,7 +165,7 @@
                             "scope": "/",
                             "name": "[parameters('subscriptionName')]",
                             "properties": {
-                                "workLoad": "Production",
+                                "workLoad": "[parameters('Workload')]",
                                 "displayName": "[parameters('subscriptionName')]",
                                 "billingScope": "[parameters('eaEnrollmentAccount')]",
                                 "managementGroupId": "[parameters('managementGroupId')]",
