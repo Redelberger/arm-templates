@@ -16,7 +16,7 @@
                         }
                     ]
                 },
-                {   "name": "lzSettings",
+                {   "name": "SubscriptionSettings",
                     "label": "Create EA-Subscription",
                     "bladeTitle": "Create EA-Subscription",
                     "elements": [
@@ -49,7 +49,7 @@
                             "multiLine": true,
                             "visible": true,
                             "constraints": {
-                                "allowedValues": "[map(steps('lzSettings').esBillingApi.value, (billing) => parse(concat('{\"label\":\"', billing.properties.displayName, '\",\"description\":\"', billing.id, '\",\"value\":\"', toLower(billing.id), '\"}')) )]",
+                                "allowedValues": "[map(steps('SubscriptionSettings').esBillingApi.value, (billing) => parse(concat('{\"label\":\"', billing.properties.displayName, '\",\"description\":\"', billing.id, '\",\"value\":\"', toLower(billing.id), '\"}')) )]",
                                 "required": true
                             }
                         },
@@ -57,7 +57,7 @@
                             "type": "Microsoft.Solutions.ArmApiControl",
                             "request": {
                                 "method": "GET",
-                                "path": "[concat(steps('lzSettings').billingAccount, '/enrollmentAccounts/', '?api-version=2019-10-01-preview')]"
+                                "path": "[concat(steps('SubscriptionSettings').billingAccount, '/enrollmentAccounts/', '?api-version=2019-10-01-preview')]"
                             }
                         },
                         {   "name": "eaEnrollmentAccount",
@@ -71,7 +71,7 @@
                             "multiLine": true,
                             "visible": true,
                             "constraints": {
-                                "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.id), '\"}')) )]",
+                                "allowedValues": "[map(steps('SubscriptionSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.id), '\"}')) )]",
                                 "required": true
                             }
                         },
@@ -91,7 +91,20 @@
                             "label": "Subscription Owner",
                             "placeholder": "Select Subscription Owner",
                             "constraints": {
-                                "allowedValues": "[map(steps('lzSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.properties.displayName), '\"}')) )]",
+                                "allowedValues": "[map(steps('SubscriptionSettings').esEaApi.value, (ea) => parse(concat('{\"label\":\"', ea.properties.displayName, '\",\"description\":\"', ea.id, '\",\"value\":\"', toLower(ea.properties.displayName), '\"}')) )]",
+                                "required": true
+                            }
+                        },
+                        {   "name": "Workload",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Workload",
+                            "defaultValue": "Production",
+                            "placeholder": "Workload..",
+                            "constraints": {
+                                "allowedValues": [
+                                    "Production",
+                                    "DevTest"
+                                ],
                                 "required": true
                             }
                         },
@@ -105,14 +118,29 @@
                                 "validations": [
                                     {
                                         "regex": "^[a-z0-9A-Z-]{1,30}$",
-                                        "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                                        "message": "Only alphanumeric characters and hyphens are allowed, and the value must be 1-30 characters long."
+                                    }
+                                ]
+                            }
+                        },
+                        {   "name": "subscriptionOwnerGroup",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Subscription Owner Group",
+                            "defaultValue": "[concat('rbac-', steps('SubscriptionSettings').subscriptionName)]",
+                            "placeholder": "Subscription Owner Group..",
+                            "constraints": {
+                                "required": true,
+                                "validations": [
+                                    {
+                                        "regex": "^[a-z0-9A-Z-]{1,30}$",
+                                        "message": "Only alphanumeric characters and hyphens are allowed, and the value must be 1-30 characters long."
                                     }
                                 ]
                             }
                         }
                     ]
                 },
-                {   "name": "lzBudget",
+                {   "name": "BudgetSettings",
                     "label": "Define Budget",
                     "bladeTitle": "Define Budget",
                     "elements": [
@@ -130,7 +158,7 @@
                         {   "name": "budgetName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "budgetName",
-                            "defaultValue": "[concat('bill-', steps('lzSettings').subscriptionName)]",
+                            "defaultValue": "[concat('bill-', steps('SubscriptionSettings').subscriptionName)]",
                             "toolTip": "Use only allowed characters",
                             "placeholder": "",
                             "multiLine": false,
@@ -142,11 +170,11 @@
                                     "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
                                 },
                                 {
-                                    "isValid": "[endsWith(steps('lzBudget').budgetName, steps('lzSettings').subscriptionName)]",
+                                    "isValid": "[endsWith(steps('BudgetSettings').budgetName, steps('SubscriptionSettings').subscriptionName)]",
                                     "message": "Must end with Subscription-Name."
                                 },
                                 {
-                                    "isValid": "[startsWith(steps('lzBudget').budgetName, 'bill-')]",
+                                    "isValid": "[startsWith(steps('BudgetSettings').budgetName, 'bill-')]",
                                     "message": "Must start with 'bill-'."
                                 }
                             ]
@@ -296,7 +324,7 @@
                         {   "name": "contactEmails",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Contact Emails",
-                            "defaultValue": "[concat('[\"', steps('lzSettings').subscriptionOwnerId, '\"]')]",
+                            "defaultValue": "[concat('[\"', steps('SubscriptionSettings').subscriptionOwnerId, '\"]')]",
                             "toolTip": "The email address to send the budget notification to when the threshold is exceeded. Expected format is [\"user1@domain.com\",\"user2@domain.com\"]",
                             "constraints": {
                                 "required": true,
@@ -311,19 +339,21 @@
         },
         "outputs": {
             "parameters": {
-                "eaEnrollmentAccount": "[steps('lzSettings').eaEnrollmentAccount]",
-                "subscriptionName": "[steps('lzSettings').subscriptionName]",
-                "subscriptionOwnerId": "[steps('lzSettings').subscriptionOwnerId]",
+                "eaEnrollmentAccount": "[steps('SubscriptionSettings').eaEnrollmentAccount]",
+                "Workload": "[steps('SubscriptionSettings').Workload]",
+                "subscriptionName": "[steps('SubscriptionSettings').subscriptionName]",
+                "subscriptionOwnerGroup": "[steps('SubscriptionSettings').subscriptionOwnerGroup]",
+                "subscriptionOwnerId": "[steps('SubscriptionSettings').subscriptionOwnerId]",
                 "managementGroupId": "[steps('basics').resourceScope.managementGroup.id]",
-                "budgetName": "[steps('lzBudget').budgetName]",
-                "amount": "[steps('lzBudget').amount]",
-                "timeGrain": "[steps('lzBudget').timeGrain]",
-                "startDate": "[steps('lzBudget').startDate]",
-                "endDate": "[steps('lzBudget').endDate]",
-                "firstThreshold": "[steps('lzBudget').firstThreshold]",
-                "secondThreshold": "[steps('lzBudget').secondThreshold]",
-                "contactRoles": "[steps('lzBudget').contactRoles]",
-                "contactEmails": "[steps('lzBudget').contactEmails]"
+                "budgetName": "[steps('BudgetSettings').budgetName]",
+                "amount": "[steps('BudgetSettings').amount]",
+                "timeGrain": "[steps('BudgetSettings').timeGrain]",
+                "startDate": "[steps('BudgetSettings').startDate]",
+                "endDate": "[steps('BudgetSettings').endDate]",
+                "firstThreshold": "[steps('BudgetSettings').firstThreshold]",
+                "secondThreshold": "[steps('BudgetSettings').secondThreshold]",
+                "contactRoles": "[steps('BudgetSettings').contactRoles]",
+                "contactEmails": "[steps('BudgetSettings').contactEmails]"
             },
             "kind": "ManagementGroup",
             "location": "[steps('basics').resourceScope.location.name]",
