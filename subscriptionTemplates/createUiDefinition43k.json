@@ -354,6 +354,18 @@
                     "label": "Create VM",
                     "bladeTitle": "Create VM",
                     "elements": [
+                        {   "name": "DummiySID",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "DummiySID",
+                            "defaultValue": "[steps('basics').resourceScope.subscription.subscriptionId]",
+                            "toolTip": "[steps('basics').resourceScope.location.name]",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
                         {   "name": "vmSize",
                             "type": "Microsoft.Compute.SizeSelector",
                             "label": "Vm Size",
