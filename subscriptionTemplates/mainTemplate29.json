@@ -222,6 +222,53 @@
             "metadata": {
                 "description": "The name of the storage account."
             }
+        },
+        "defaultSubscriptionName": {
+            "type": "string",
+            "defaultValue": "[subscription().displayName]",
+            "metadata": {
+                "description": "Change, if required the name of the default Subscription Name"
+            }
+        },
+        "defaultNsgName": {
+            "type": "string",
+            "defaultValue": "[concat('nsg-',parameters('defaultSubscriptionName'))]",
+            "metadata": {
+            "displayName": "Change, if required the name of the default Network Security Group (NSG)"
+            }
+        },
+        "defaultVnetName": {
+            "type": "string",
+            "defaultValue": "[concat('vnet-',parameters('defaultSubscriptionName'))]",
+            "metadata": {
+            "displayName": "Change, if required the name of the default Virtual Network"
+            }
+        },
+        "defaultSubnetName": {
+            "type": "string",
+            "defaultValue": "[concat('subnet-',parameters('defaultSubscriptionName'))]",
+            "metadata": {
+            "description": "Change, if required the name of the default Subnet Name"
+            }
+        },
+        "defaultRoutingTableName": {
+            "type": "string",
+            "defaultValue": "[concat('rt-',parameters('defaultSubscriptionName'))]",
+            "metadata": {
+            "description": "Change, if required the name of the default Routing Table Name"
+            }
+        },
+        "addressSpaceVnet": {
+            "type": "string",
+            "defaultValue": "172.28.62.64/28"
+        },
+        "addressSpaceSubnet": {
+            "type": "string",
+            "defaultValue": "172.28.62.64/28"
+        },
+        "nextHopIpAddress": {
+            "type": "string",
+            "defaultValue": "172.28.63.164"
         }
     },
     "variables": {
@@ -405,6 +452,27 @@
                     },
                     "storageAccountName": {
                         "value": "[parameters('storageAccountName')]"
+                    },
+                    "defaultNsgName": {
+                        "value": "[parameters('defaultNsgName')]"
+                    },
+                    "defaultVnetName": {
+                        "value": "[parameters('defaultVnetName')]"
+                    },
+                    "defaultSubnetName": {
+                        "value": "[parameters('defaultSubnetName')]"
+                    },
+                    "defaultRoutingTableName": {
+                        "value": "[parameters('defaultRoutingTableName')]"
+                    },
+                    "addressSpaceVnet": {
+                        "value": "[parameters('addressSpaceVnet')]"
+                    },
+                    "addressSpaceSubnet": {
+                        "value": "[parameters('addressSpaceSubnet')]"
+                    },
+                    "nextHopIpAddress": {
+                        "value": "[parameters('nextHopIpAddress')]"
                     }
                 },
                 "template": {
@@ -572,6 +640,39 @@
                             "metadata": {
                                 "description": "The name of the storage account."
                             }
+                        },
+                        "defaultNsgName": {
+                            "type": "string",
+                            "metadata": {
+                                "displayName": "Change, if required the name of the default Network Security Group (NSG)"
+                            }
+                        },
+                        "defaultVnetName": {
+                            "type": "string",
+                            "metadata": {
+                                "displayName": "Change, if required the name of the default Virtual Network"
+                            }
+                        },
+                        "defaultSubnetName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Change, if required the name of the default Subnet Name"
+                            }
+                        },
+                        "defaultRoutingTableName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Change, if required the name of the default Routing Table Name"
+                            }
+                        },
+                        "addressSpaceVnet": {
+                            "type": "string"
+                        },
+                        "addressSpaceSubnet": {
+                            "type": "string"
+                        },
+                        "nextHopIpAddress": {
+                            "type": "string"
                         }
                     },
                     "resources": [
@@ -762,6 +863,174 @@
                         },
                         {   "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2020-10-01",
+                            "name": "Create-Network",
+                            "subscriptionId": "[parameters('subscriptionId')]",
+                            "resourceGroup": "rg-network",
+                            "dependsOn": [
+                                "Create-NetworkRG"
+                            ],
+                            "properties": {
+                                "expressionEvaluationOptions": {
+                                    "scope": "inner"
+                                },
+                                "mode": "Incremental",
+                                "parameters": {
+                                    "location": {
+                                        "value": "[deployment().location]"
+                                    },
+                                    "defaultNsgName": {
+                                        "value": "[parameters('defaultNsgName')]"
+                                    },
+                                    "defaultVnetName": {
+                                        "value": "[parameters('defaultVnetName')]"
+                                    },
+                                    "defaultSubnetName": {
+                                        "value": "[parameters('defaultSubnetName')]"
+                                    },
+                                    "defaultRoutingTableName": {
+                                        "value": "[parameters('defaultRoutingTableName')]"
+                                    },
+                                    "addressSpaceVnet": {
+                                        "value": "[parameters('addressSpaceVnet')]"
+                                    },
+                                    "addressSpaceSubnet": {
+                                        "value": "[parameters('addressSpaceSubnet')]"
+                                    },
+                                    "nextHopIpAddress": {
+                                        "value": "[parameters('nextHopIpAddress')]"
+                                    }
+                                },
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {
+                                        "location": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "The lcoation for the resource"
+                                            }
+                                        },
+                                        "defaultNsgName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "displayName": "Change, if required the name of the default Network Security Group (NSG)"
+                                            }
+                                        },
+                                        "defaultVnetName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "displayName": "Change, if required the name of the default Virtual Network"
+                                            }
+                                        },
+                                        "defaultSubnetName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "Change, if required the name of the default Subnet Name"
+                                            }
+                                        },
+                                        "defaultRoutingTableName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "Change, if required the name of the default Routing Table Name"
+                                            }
+                                        },
+                                        "addressSpaceVnet": {
+                                            "type": "string"
+                                        },
+                                        "addressSpaceSubnet": {
+                                            "type": "string"
+                                        },
+                                        "nextHopIpAddress": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "variables": {
+                                    },
+                                    "resources": [
+                                            {   "type": "Microsoft.Network/networkSecurityGroups",
+                                                "apiVersion": "2021-02-01",
+                                                "name": "[parameters('defaultNsgName')]",
+                                                "location": "[parameters('location')]",
+                                                "properties": {
+                                                "securityRules": [
+                                                    {
+                                                    "name": "default-allow-3389",
+                                                    "properties": {
+                                                        "priority": 1000,
+                                                        "access": "Allow",
+                                                        "direction": "Inbound",
+                                                        "destinationPortRange": "3389",
+                                                        "protocol": "Tcp",
+                                                        "sourcePortRange": "*",
+                                                        "sourceAddressPrefix": "*",
+                                                        "destinationAddressPrefix": "*"
+                                                    }
+                                                    }
+                                                ]
+                                                }
+                                            },
+                                            {   "type": "Microsoft.Network/virtualNetworks",
+                                                "apiVersion": "2022-05-01",
+                                                "name": "[parameters('defaultVnetName')]",
+                                                "location": "[parameters('location')]",
+                                                "properties": {
+                                                "addressSpace": {
+                                                    "addressPrefixes": [
+                                                        "[parameters('addressSpaceVnet')]"
+                                                    ]
+                                                },
+                                                "dhcpOptions": {
+                                                    "dnsServers": [
+                                                    "172.25.4.79",
+                                                    "172.25.8.79",
+                                                    "10.200.85.122"
+                                                    ]
+                                                },
+                                                "subnets": [
+                                                    {
+                                                    "name": "[parameters('defaultSubnetName')]",
+                                                    "properties": {
+                                                        "addressPrefix": "[parameters('addressSpaceSubnet')]",
+                                                        "networkSecurityGroup": {
+                                                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('defaultNsgName'))]"
+                                                        },
+                                                        "routeTable": {
+                                                            "id": "[resourceId('Microsoft.Network/routeTables', parameters('defaultRoutingTableName'))]"
+                                                        }
+                                                    }
+                                                    }
+                                                ]
+                                                },
+                                                "dependsOn": [
+                                                    "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('defaultNsgName'))]",
+                                                    "[resourceId('Microsoft.Network/routeTables', parameters('defaultRoutingTableName'))]"
+                                                ]
+                                            },
+                                            {   "type": "Microsoft.Network/routeTables",
+                                                "apiVersion": "2022-05-01",
+                                                "name": "[parameters('defaultRoutingTableName')]",
+                                                "location": "[parameters('location')]",
+                                                "properties": {
+                                                    "disableBgpRoutePropagation": false,
+                                                    "routes": [
+                                                        {
+                                                            "type": "Microsoft.Network/routeTables/routes",
+                                                            "name": "default",
+                                                            "properties": {
+                                                                "addressPrefix": "0.0.0.0/0",
+                                                                "nextHopIpAddress": "[parameters('nextHopIpAddress')]",
+                                                                "nextHopType": "VirtualAppliance"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                    ]
+                                }
+                            }
+                        },
+                        {   "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-10-01",
                             "name": "[format('Create-{0}', parameters('vmName'))]",
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "resourceGroup": "rg-virtualmachines",
@@ -836,7 +1105,7 @@
                                         "location": {
                                             "type": "string",
                                             "metadata": {
-                                                "description": "The lcoation for the reosurce"
+                                                "description": "The lcoation for the resource"
                                             }
                                         },
                                         "vmSize": {
