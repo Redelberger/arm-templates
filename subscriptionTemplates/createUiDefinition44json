@@ -354,31 +354,30 @@
                     "label": "Create VM",
                     "bladeTitle": "Create VM",
                     "elements": [
-                        {   "name": "vmSize",
+                        {
+                            "name": "element1",
                             "type": "Microsoft.Compute.SizeSelector",
-                            "label": "Vm Size",
-                            "toolTip": "Size of VM",
+                            "label": "Size",
+                            "toolTip": "",
                             "recommendedSizes": [
-                                "Standard_B2s"
+                              "Standard_D1",
+                              "Standard_D2",
+                              "Standard_D3"
                             ],
                             "constraints": {
-                                "allowedSizes": [
-                                    "Standard_B2s",
-                                    "Standard_B2ms",
-                                    "Standard_B4ms"
-                                ],
-                                "excludedSizes": [],
-                                "numAvailabilityZonesRequired": 3,
-                                "zone": "3"
+                              "allowedSizes": [],
+                              "excludedSizes": [],
+                              "numAvailabilityZonesRequired": 3,
+                              "zone": "3"
                             },
                             "options": {
-                                "hideDiskTypeFilter": false
+                              "hideDiskTypeFilter": false
                             },
                             "osPlatform": "Windows",
                             "imageReference": {
-                                "publisher": "MicrosoftWindowsServer",
-                                "offer": "WindowsServer",
-                                "sku": "2019-Datacenter"
+                              "publisher": "MicrosoftWindowsServer",
+                              "offer": "WindowsServer",
+                              "sku": "2012-R2-Datacenter"
                             },
                             "count": 2,
                             "visible": true
