@@ -96,10 +96,12 @@
                             }
                         },
                         {   "name": "Workload",
-                            "type": "Microsoft.Common.TextBox",
+                            "type": "Microsoft.Common.DropDown",
                             "label": "Workload",
+                            "toolTip": "The workload type of the subscription. It can be either Production or DevTest.",
                             "defaultValue": "Production",
                             "placeholder": "Workload..",
+                            "visible": true,
                             "constraints": {
                                 "allowedValues": [
                                     "Production",
