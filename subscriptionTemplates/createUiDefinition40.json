@@ -152,7 +152,35 @@
                                     }
                                 ]
                             }
-                        }
+                        },
+                        {
+                            "name": "ServicePrincipal",
+                            "type": "Microsoft.Common.ServicePrincipalSelector",
+                            "label": {
+                              "password": "Password",
+                              "certificateThumbprint": "Certificate thumbprint",
+                              "authenticationType": "Authentication Type",
+                              "sectionHeader": "Service Principal"
+                            },
+                            "toolTip": {
+                              "password": "Password",
+                              "certificateThumbprint": "Certificate thumbprint",
+                              "authenticationType": "Authentication Type"
+                            },
+                            "defaultValue": {
+                              "principalId": "f897518b-1f7e-4fcc-9af2-01f9ecb2e239",
+                              "name": "rbac-Azure_WS-Owner"
+                            },
+                            "constraints": {
+                              "required": true,
+                              "regex": "^[a-zA-Z0-9]{8,}$",
+                              "validationMessage": "Password must be at least 8 characters long, contain only numbers and letters"
+                            },
+                            "options": {
+                              "hideCertificate": false
+                            },
+                            "visible": true
+                          }
                     ]
                 },
                 {   "name": "BudgetSettings",
