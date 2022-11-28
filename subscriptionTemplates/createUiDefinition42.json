@@ -354,14 +354,6 @@
                     "label": "Create VM",
                     "bladeTitle": "Create VM",
                     "elements": [
-                        {   "name": "resourceScope",
-                            "type": "Microsoft.Common.ResourceScope",
-                            "location": {
-                                "resourceTypes": [
-                                    "microsoft.resources/resourcegroups"
-                                ]
-                            }
-                        },
                         {   "name": "vmSize",
                             "type": "Microsoft.Compute.SizeSelector",
                             "label": "Vm Size",
@@ -377,16 +369,13 @@
                                     "Standard_B4ms"
                                 ]
                             },
+                            "osPlatform": "Windows",
                             "imageReference": {
                                 "publisher": "MicrosoftWindowsServer",
                                 "offer": "WindowsServer",
                                 "sku": "2019-Datacenter"
                             },
-                            "visible": true,
-                            "scope": {
-                                "subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
-                                "location": "[steps('basics').resourceScope.location.name]"
-                            }
+                            "visible": true
                         },
                         {   "name": "windowsOSVersion",
                             "type": "Microsoft.Common.DropDown",
@@ -416,18 +405,6 @@
                             },
                             "visible": true
                         },
-                        {   "name": "defaultSubscriptionName",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Default Subscription Name",
-                            "defaultValue": "[[subscription().displayName]",
-                            "toolTip": "Change, if required the name of the default Subscription Name",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
                         {   "name": "defaultNetworkRG",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Default Network RG",
@@ -443,7 +420,7 @@
                         {   "name": "defaultVnetName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Default Vnet Name",
-                            "defaultValue": "[[concat('vnet-',parameters('defaultSubscriptionName'))]",
+                            "defaultValue": "[concat('vnet-', steps('SubscriptionSettings').subscriptionName)]",
                             "toolTip": "Change, if required the name of the default Vnet Name",
                             "constraints": {
                                 "required": false,
@@ -455,7 +432,7 @@
                         {   "name": "defaultSubnetName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Default Subnet Name",
-                            "defaultValue": "[[concat('subnet-',parameters('defaultSubscriptionName'))]",
+                            "defaultValue": "[concat('subnet-', steps('SubscriptionSettings').subscriptionName)]",
                             "toolTip": "Change, if required the name of the default Subnet Name",
                             "constraints": {
                                 "required": false,
@@ -467,7 +444,7 @@
                         {   "name": "existingVnetId",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Existing Vnet Id",
-                            "defaultValue": "[[resourceId(parameters('defaultNetworkRG'), 'Microsoft.Network/virtualNetworks', parameters('defaultVnetName'))]",
+                            "defaultValue": "[[resourceId(steps('VmSettings').defaultNetworkRG, 'Microsoft.Network/virtualNetworks', steps('VmSettings').defaultVnetName)]",
                             "toolTip": "Existing VNET that has access to the domain controllers",
                             "constraints": {
                                 "required": false,
@@ -479,7 +456,7 @@
                         {   "name": "existingSubnetId",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Existing Subnet Id",
-                            "defaultValue": "[[resourceId('rg-network', 'Microsoft.Network/virtualNetworks/subnets', parameters('defaultVnetName'), parameters('defaultSubnetName'))]",
+                            "defaultValue": "[[resourceId('rg-network', 'Microsoft.Network/virtualNetworks/subnets', steps('VmSettings').defaultVnetName, steps('VmSettings').defaultSubnetName)]",
                             "toolTip": "Existing subnet that has access to the domain controllers",
                             "constraints": {
                                 "required": false,
@@ -503,7 +480,7 @@
                         {   "name": "domainToJoin",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Domain To Join",
-                            "defaultValue": "spiegel.spiegel.de",
+                            "defaultValue": "",
                             "toolTip": "The FQDN of the AD domain",
                             "constraints": {
                                 "required": false,
@@ -515,7 +492,7 @@
                         {   "name": "NetBIOSdomainToJoin",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Net BIO Sdomain To Join",
-                            "defaultValue": "SPIEGEL",
+                            "defaultValue": "",
                             "toolTip": "The NetBIOS Name of the AD domain",
                             "constraints": {
                                 "required": false,
@@ -527,7 +504,7 @@
                         {   "name": "domainUsername",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Domain Username",
-                            "defaultValue": "svc.adjoin-vmserver-",
+                            "defaultValue": "",
                             "toolTip": "Username with domain-join privileges",
                             "constraints": {
                                 "required": false,
@@ -544,7 +521,7 @@
                             },
                             "toolTip": "Password of the account with domain-join privileges",
                             "constraints": {
-                                "required": true,
+                                "required": false,
                                 "regex": "",
                                 "validationMessage": ""
                             },
@@ -556,7 +533,7 @@
                         {   "name": "ouPath",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Ou Path",
-                            "defaultValue": "CN=Computers,DC=spiegel,DC=spiegel,DC=de",
+                            "defaultValue": "",
                             "toolTip": "Organizational Unit path in which the object will be created.",
                             "constraints": {
                                 "required": false,
@@ -597,7 +574,7 @@
                             },
                             "toolTip": "The password for the local administrator account of the new VM.",
                             "constraints": {
-                                "required": true,
+                                "required": false,
                                 "regex": "",
                                 "validationMessage": ""
                             },
@@ -609,20 +586,8 @@
                         {   "name": "storageAccountName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Storage Account Name",
-                            "defaultValue": "[[uniqueString(resourceGroup().id, deployment().name)]",
+                            "defaultValue": "",
                             "toolTip": "The name of the storage account.",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {   "name": "location",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Location",
-                            "defaultValue": "[[resourceGroup().location]",
-                            "toolTip": "Location for all resources.",
                             "constraints": {
                                 "required": false,
                                 "regex": "",
@@ -653,7 +618,6 @@
                 "contactEmails": "[steps('BudgetSettings').contactEmails]",
                 "vmSize": "[steps('VmSettings').vmSize]",
                 "windowsOSVersion": "[steps('VmSettings').windowsOSVersion]",
-                "defaultSubscriptionName": "[steps('VmSettings').defaultSubscriptionName]",
                 "defaultNetworkRG": "[steps('VmSettings').defaultNetworkRG]",
                 "defaultVnetName": "[steps('VmSettings').defaultVnetName]",
                 "defaultSubnetName": "[steps('VmSettings').defaultSubnetName]",
@@ -668,8 +632,7 @@
                 "domainJoinOptions": "[steps('VmSettings').domainJoinOptions]",
                 "adminUsername": "[steps('VmSettings').adminUsername]",
                 "adminPassword": "[steps('VmSettings').adminPassword]",
-                "storageAccountName": "[steps('VmSettings').storageAccountName]",
-                "location": "[steps('VmSettings').location]"
+                "storageAccountName": "[steps('VmSettings').storageAccountName]"
             },
             "kind": "ManagementGroup",
             "location": "[steps('basics').resourceScope.location.name]",
