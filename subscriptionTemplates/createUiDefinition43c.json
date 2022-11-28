@@ -359,27 +359,6 @@
                             "type": "Microsoft.Compute.SizeSelector",
                             "label": "VM Size",
                             "toolTip": "",
-                            "recommendedSizes": [
-                              "Standard_D1",
-                              "Standard_D2",
-                              "Standard_D3"
-                            ],
-                            "constraints": {
-                              "allowedSizes": [],
-                              "excludedSizes": [],
-                              "numAvailabilityZonesRequired": 3,
-                              "zone": "3"
-                            },
-                            "options": {
-                              "hideDiskTypeFilter": false
-                            },
-                            "osPlatform": "Windows",
-                            "imageReference": {
-                              "publisher": "MicrosoftWindowsServer",
-                              "offer": "WindowsServer",
-                              "sku": "2012-R2-Datacenter"
-                            },
-                            "count": 2,
                             "visible": true
                         },
                         {   "name": "windowsOSVersion",
