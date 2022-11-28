@@ -27,7 +27,6 @@
         },
         "budgetName": {
             "type": "string",
-            "defaultValue": "MyBudget",
             "metadata": {
                 "description": "Name of the Budget. It should be unique within a resource group."
             }
@@ -219,7 +218,7 @@
         },
         "storageAccountName": {
             "type": "string",
-            "defaultValue": "[uniqueString(resourceGroup().id, deployment().name)]",
+            "defaultValue": "[uniqueString(parameters('managementGroupId'), parameters('subscriptionName'))]",
             "metadata": {
                 "description": "The name of the storage account."
             }
@@ -355,6 +354,57 @@
                     },
                     "contactRoles": {
                         "value": "[parameters('contactRoles')]"
+                    },
+                    "vmSize": {
+                        "value": "[parameters('vmSize')]"
+                    },
+                    "windowsOSVersion": {
+                        "value": "[parameters('windowsOSVersion')]"
+                    },
+                    "defaultNetworkRG": {
+                        "value": "[parameters('defaultNetworkRG')]"
+                    },
+                    "defaultVnetName": {
+                        "value": "[parameters('defaultVnetName')]"
+                    },
+                    "defaultSubnetName": {
+                        "value": "[parameters('defaultSubnetName')]"
+                    },
+                    "existingVnetId": {
+                        "value": "[parameters('existingVnetId')]"
+                    },
+                    "existingSubnetId": {
+                        "value": "[parameters('existingSubnetId')]"
+                    },
+                    "vmName": {
+                        "value": "[parameters('vmName')]"
+                    },
+                    "domainToJoin": {
+                        "value": "[parameters('domainToJoin')]"
+                    },
+                    "NetBIOSdomainToJoin": {
+                        "value": "[parameters('NetBIOSdomainToJoin')]"
+                    },
+                    "domainUsername": {
+                        "value": "[parameters('domainUsername')]"
+                    },
+                    "domainPassword": {
+                        "value": "[parameters('domainPassword')]"
+                    },
+                    "ouPath": {
+                        "value": "[parameters('ouPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": "[parameters('domainJoinOptions')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
                     }
                 },
                 "template": {
@@ -419,6 +469,108 @@
                             "type": "array",
                             "metadata": {
                                 "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
+                            }
+                        },
+                        "vmSize": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Size of VM"
+                            }
+                        },
+                        "windowsOSVersion": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2012-R2-Datacenter, 2016-Datacenter, 2019-Datacenter, 2022-Datacenter."
+                            }
+                        },
+                        "defaultNetworkRG": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Change, if required the name of the default Network Resource Group"
+                            }
+                        },
+                        "defaultVnetName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Change, if required the name of the default Vnet Name"
+                            }
+                        },
+                        "defaultSubnetName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Change, if required the name of the default Subnet Name"
+                            }
+                        },
+                        "existingVnetId": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Existing VNET that has access to the domain controllers"
+                            }
+                        },
+                        "existingSubnetId": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Existing subnet that has access to the domain controllers"
+                            }
+                        },
+                        "vmName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+                            }
+                        },
+                        "domainToJoin": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The FQDN of the AD domain"
+                            }
+                        },
+                        "NetBIOSdomainToJoin": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The NetBIOS Name of the AD domain"
+                            }
+                        },
+                        "domainUsername": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Username with domain-join privileges"
+                            }
+                        },
+                        "domainPassword": {
+                            "type": "secureString",
+                            "metadata": {
+                                "description": "Password of the account with domain-join privileges"
+                            }
+                        },
+                        "ouPath": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Organizational Unit path in which the object will be created."
+                            }
+                        },
+                        "domainJoinOptions": {
+                            "type": "int",
+                            "metadata": {
+                                "description": "Set of bit flags that define the join options. Default value of 3 is a combination of NETSETUP_JOIN_DOMAIN (0x00000001) & NETSETUP_ACCT_CREATE (0x00000002) i.e. will join the domain and create the account on the domain. For more information see https://msdn.microsoft.com/en-us/library/aa392154(v=vs.85).aspx"
+                            }
+                        },
+                        "adminUsername": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The name of the local administrator of the new VM."
+                            }
+                        },
+                        "adminPassword": {
+                            "type": "secureString",
+                            "metadata": {
+                                "description": "The password for the local administrator account of the new VM."
+                            }
+                        },
+                        "storageAccountName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The name of the storage account."
                             }
                         }
                     },
@@ -558,7 +710,7 @@
                         },
                         {   "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2020-10-01",
-                            "name": "[format('Create-{0}', parameters('budgetName'))]",
+                            "name": "[format('Create-{0}', parameters('vmName'))]",
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "location": "[deployment().location]",
                             "properties": {
@@ -567,128 +719,328 @@
                                 },
                                 "mode": "Incremental",
                                 "parameters": {
-                                    "budgetName": {
-                                        "value": "[parameters('budgetName')]"
+                                    "vmSize": {
+                                        "value": "[parameters('vmSize')]"
                                     },
-                                    "startDate": {
-                                        "value": "[parameters('startDate')]"
+                                    "windowsOSVersion": {
+                                        "value": "[parameters('windowsOSVersion')]"
                                     },
-                                    "endDate": {
-                                        "value": "[parameters('endDate')]"
+                                    "defaultNetworkRG": {
+                                        "value": "[parameters('defaultNetworkRG')]"
                                     },
-                                    "timeGrain": {
-                                        "value": "[parameters('timeGrain')]"
+                                    "defaultVnetName": {
+                                        "value": "[parameters('defaultVnetName')]"
                                     },
-                                    "amount": {
-                                        "value": "[parameters('amount')]"
+                                    "defaultSubnetName": {
+                                        "value": "[parameters('defaultSubnetName')]"
                                     },
-                                    "firstThreshold": {
-                                        "value": "[parameters('firstThreshold')]"
+                                    "existingVnetId": {
+                                        "value": "[parameters('existingVnetId')]"
                                     },
-                                    "secondThreshold": {
-                                        "value": "[parameters('secondThreshold')]"
+                                    "existingSubnetId": {
+                                        "value": "[parameters('existingSubnetId')]"
                                     },
-                                    "contactEmails": {
-                                        "value": "[parameters('contactEmails')]"
+                                    "vmName": {
+                                        "value": "[parameters('vmName')]"
                                     },
-                                    "contactRoles": {
-                                        "value": "[parameters('contactRoles')]"
+                                    "domainToJoin": {
+                                        "value": "[parameters('domainToJoin')]"
+                                    },
+                                    "NetBIOSdomainToJoin": {
+                                        "value": "[parameters('NetBIOSdomainToJoin')]"
+                                    },
+                                    "domainUsername": {
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    "domainPassword": {
+                                        "value": "[parameters('domainPassword')]"
+                                    },
+                                    "ouPath": {
+                                        "value": "[parameters('ouPath')]"
+                                    },
+                                    "domainJoinOptions": {
+                                        "value": "[parameters('domainJoinOptions')]"
+                                    },
+                                    "adminUsername": {
+                                        "value": "[parameters('adminUsername')]"
+                                    },
+                                    "adminPassword": {
+                                        "value": "[parameters('adminPassword')]"
+                                    },
+                                    "storageAccountName": {
+                                        "value": "[parameters('storageAccountName')]"
                                     }
                                 },
                                 "template": {
                                     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
                                     "contentVersion": "1.0.0.0",
                                     "parameters": {
-                                        "budgetName": {
+                                        "vmSize": {
                                             "type": "string",
+                                            "defaultValue": "Standard_B2s",
                                             "metadata": {
-                                                "description": "Name of the Budget. It should be unique within a resource group."
+                                                "description": "Size of VM"
+                                            },
+                                            "allowedValues": [
+                                                "Standard_B2s",
+                                                "Standard_B2ms",
+                                                "Standard_B4ms"
+                                            ]
+                                        },
+                                        "windowsOSVersion": {
+                                            "type": "string",
+                                            "defaultValue": "2019-Datacenter",
+                                            "allowedValues": [
+                                                "2012-R2-Datacenter",
+                                                "2016-Datacenter",
+                                                "2019-Datacenter",
+                                                "2022-Datacenter"
+                                            ],
+                                            "metadata": {
+                                                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2012-R2-Datacenter, 2016-Datacenter, 2019-Datacenter, 2022-Datacenter."
                                             }
                                         },
-                                        "startDate": {
+                                        "defaultNetworkRG": {
                                             "type": "string",
+                                            "defaultValue": "rg-network",
                                             "metadata": {
-                                                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
+                                                "description": "Change, if required the name of the default Network Resource Group"
                                             }
                                         },
-                                        "endDate": {
+                                        "defaultVnetName": {
                                             "type": "string",
+                                            "defaultValue": "[concat('vnet-',parameters('defaultSubscriptionName'))]",
                                             "metadata": {
-                                                "description": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date."
+                                                "description": "Change, if required the name of the default Vnet Name"
                                             }
                                         },
-                                        "timeGrain": {
+                                        "defaultSubnetName": {
                                             "type": "string",
+                                            "defaultValue": "[concat('subnet-',parameters('defaultSubscriptionName'))]",
                                             "metadata": {
-                                                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
+                                                "description": "Change, if required the name of the default Subnet Name"
                                             }
                                         },
-                                        "amount": {
+                                        "existingVnetId": {
+                                            "type": "string",
+                                            "defaultValue": "[resourceId(parameters('defaultNetworkRG'), 'Microsoft.Network/virtualNetworks', parameters('defaultVnetName'))]",
+                                            "metadata": {
+                                                "description": "Existing VNET that has access to the domain controllers"
+                                            }
+                                        },
+                                        "existingSubnetId": {
+                                            "type": "string",
+                                            "defaultValue": "[resourceId('rg-network', 'Microsoft.Network/virtualNetworks/subnets', parameters('defaultVnetName'), parameters('defaultSubnetName'))]",
+                                            "metadata": {
+                                                "description": "Existing subnet that has access to the domain controllers"
+                                            }
+                                        },
+                                        "vmName": {
+                                            "type": "string",
+                                            "defaultValue": "vm-test-01-d",
+                                            "maxLength": 15,
+                                            "minLength": 1,
+                                            "metadata": {
+                                                "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+                                            }
+                                        },
+                                        "domainToJoin": {
+                                            "type": "string",
+                                            "defaultValue": "",
+                                            "metadata": {
+                                                "description": "The FQDN of the AD domain"
+                                            }
+                                        },
+                                        "NetBIOSdomainToJoin": {
+                                            "type": "string",
+                                            "defaultValue": "",
+                                            "metadata": {
+                                                "description": "The NetBIOS Name of the AD domain"
+                                            }
+                                        },
+                                        "domainUsername": {
+                                            "type": "string",
+                                            "defaultValue": "",
+                                            "metadata": {
+                                                "description": "Username with domain-join privileges"
+                                            }
+                                        },
+                                        "domainPassword": {
+                                            "type": "secureString",
+                                            "metadata": {
+                                                "description": "Password of the account with domain-join privileges"
+                                            }
+                                        },
+                                        "ouPath": {
+                                            "type": "string",
+                                            "defaultValue": "",
+                                            "metadata": {
+                                                "description": "Organizational Unit path in which the object will be created."
+                                            }
+                                        },
+                                        "domainJoinOptions": {
                                             "type": "int",
+                                            "defaultValue": 3,
                                             "metadata": {
-                                                "description": "The total amount of cost or usage to track with the budget"
+                                                "description": "Set of bit flags that define the join options. Default value of 3 is a combination of NETSETUP_JOIN_DOMAIN (0x00000001) & NETSETUP_ACCT_CREATE (0x00000002) i.e. will join the domain and create the account on the domain. For more information see https://msdn.microsoft.com/en-us/library/aa392154(v=vs.85).aspx"
                                             }
                                         },
-                                        "firstThreshold": {
-                                            "type": "int",
+                                        "adminUsername": {
+                                            "type": "string",
+                                            "defaultValue": "localAdmin",
                                             "metadata": {
-                                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                                                "description": "The name of the local administrator of the new VM."
                                             }
                                         },
-                                        "secondThreshold": {
-                                            "type": "int",
+                                        "adminPassword": {
+                                            "type": "secureString",
                                             "metadata": {
-                                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                                                "description": "The password for the local administrator account of the new VM."
                                             }
                                         },
-                                        "contactEmails": {
-                                            "type": "array",
+                                        "storageAccountName": {
+                                            "type": "string",
+                                            "defaultValue": "",
                                             "metadata": {
-                                                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
-                                            }
-                                        },
-                                        "contactRoles": {
-                                            "type": "array",
-                                            "metadata": {
-                                                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
+                                                "description": "The name of the storage account."
                                             }
                                         }
                                     },
+                                    "variables": {
+                                        "imagePublisher": "MicrosoftWindowsServer",
+                                        "imageOffer": "WindowsServer",
+                                        "windowsOSVersion": "2019-Datacenter",
+                                        "nicName": "[format('{0}-nic', parameters('vmName'))]"
+                                    },
                                     "resources": [
-                                        {   "type": "Microsoft.Consumption/budgets",
-                                            "apiVersion": "2021-10-01",
-                                            "name": "[parameters('budgetName')]",
+                                        {   "type": "Microsoft.Storage/storageAccounts",
+                                            "apiVersion": "2021-04-01",
+                                            "name": "[parameters('storageAccountName')]",
+                                            "location": "[deployment().location]",
+                                            "kind": "StorageV2",
+                                            "sku": {
+                                                "name": "Standard_LRS"
+                                            }
+                                        },
+                                        {   "type": "Microsoft.Network/networkInterfaces",
+                                            "apiVersion": "2021-02-01",
+                                            "name": "[variables('nicName')]",
+                                            "location": "[deployment().location]",
                                             "properties": {
-                                                "timePeriod": {
-                                                    "startDate": "[parameters('startDate')]",
-                                                    "endDate": "[parameters('endDate')]"
-                                                },
-                                                "timeGrain": "[parameters('timeGrain')]",
-                                                "amount": "[parameters('amount')]",
-                                                "category": "Cost",
-                                                "notifications": {
-                                                    "NotificationForExceededBudget1": {
-                                                    "enabled": true,
-                                                    "operator": "GreaterThan",
-                                                    "threshold": "[parameters('firstThreshold')]",
-                                                    "contactEmails": "[parameters('contactEmails')]",
-                                                    "contactRoles": "[parameters('contactRoles')]"
-                                                    },
-                                                    "NotificationForExceededBudget2": {
-                                                    "enabled": true,
-                                                    "operator": "GreaterThan",
-                                                    "threshold": "[parameters('secondThreshold')]",
-                                                    "contactEmails": "[parameters('contactEmails')]",
-                                                    "contactRoles": "[parameters('contactRoles')]",
-                                                    "thresholdType": "Forecasted"
+                                                "ipConfigurations": [
+                                                {
+                                                    "name": "ipconfig1",
+                                                    "properties": {
+                                                    "privateIPAllocationMethod": "Dynamic",
+                                                    "subnet": {
+                                                        "id": "[parameters('existingSubnetId')]"
                                                     }
+                                                    }
+                                                }
+                                                ]
+                                            }
+                                        },
+                                        {   "type": "Microsoft.Compute/virtualMachines",
+                                            "apiVersion": "2021-03-01",
+                                            "name": "[parameters('vmName')]",
+                                            "location": "[deployment().location]",
+                                            "properties": {
+                                                "hardwareProfile": {
+                                                "vmSize": "[parameters('vmSize')]"
+                                                },
+                                                "osProfile": {
+                                                "computerName": "[parameters('vmName')]",
+                                                "adminUsername": "[parameters('adminUsername')]",
+                                                "adminPassword": "[parameters('adminPassword')]"
+                                                },
+                                                "storageProfile": {
+                                                "imageReference": {
+                                                    "publisher": "[variables('imagePublisher')]",
+                                                    "offer": "[variables('imageOffer')]",
+                                                    "sku": "[parameters('windowsOSVersion')]",
+                                                    "version": "latest"
+                                                },
+                                                "osDisk": {
+                                                    "name": "[format('{0}-OsDisk', parameters('vmName'))]",
+                                                    "caching": "ReadWrite",
+                                                    "createOption": "FromImage"
+                                                },
+                                                "dataDisks": [
+                                                    {
+                                                    "name": "[format('{0}-DataDisk', parameters('vmName'))]",
+                                                    "caching": "None",
+                                                    "createOption": "Empty",
+                                                    "diskSizeGB": 1024,
+                                                    "lun": 0
+                                                    }
+                                                ]
+                                                },
+                                                "networkProfile": {
+                                                "networkInterfaces": [
+                                                    {
+                                                    "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                                                    }
+                                                ]
+                                                },
+                                                "diagnosticsProfile": {
+                                                "bootDiagnostics": {
+                                                    "enabled": true,
+                                                    "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.blob]"
+                                                }
+                                                }
+                                            },
+                                            "dependsOn": [
+                                                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+                                                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                                            ]
+                                        },
+                                        {   "type": "Microsoft.Compute/virtualMachines/extensions",
+                                            "apiVersion": "2021-03-01",
+                                            "name": "[format('{0}/{1}', parameters('vmName'), 'joindomain')]",
+                                            "location": "[deployment().location]",
+                                            "properties": {
+                                                "publisher": "Microsoft.Compute",
+                                                "type": "JsonADDomainExtension",
+                                                "typeHandlerVersion": "1.3",
+                                                "autoUpgradeMinorVersion": true,
+                                                "settings": {
+                                                "name": "[parameters('domainToJoin')]",
+                                                "ouPath": "[parameters('ouPath')]",
+                                                "user": "[format('{0}\\{1}', parameters('NetBIOSdomainToJoin'), parameters('domainUsername'))]",
+                                                "restart": true,
+                                                "options": "[parameters('domainJoinOptions')]"
+                                                },
+                                                "protectedSettings": {
+                                                "Password": "[parameters('domainPassword')]"
+                                                }
+                                            },
+                                            "dependsOn": [
+                                                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                                            ]
+                                        },
+                                        {   "type": "Microsoft.Compute/virtualMachines/extensions",
+                                            "apiVersion": "2021-04-01",
+                                            "name": "[concat(parameters('vmName'),'/', 'PostCommands')]",
+                                            "location": "[deployment().location]",
+                                            "dependsOn": [
+                                                "[resourceId('Microsoft.Compute/virtualMachines/extensions',parameters('vmName'),'joindomain')]"
+                                            ],
+                                            "properties": {
+                                                "publisher": "Microsoft.Compute",
+                                                "type": "CustomScriptExtension",
+                                                "typeHandlerVersion": "1.7",
+                                                "autoUpgradeMinorVersion": true,
+                                                "settings": {
+                                                "commandToExecute": "powershell.exe Add-LocalGroupMember -Group 'Administrators' -Member 'adm.tobias.redelberger@spiegel.de' && powershell.exe Add-LocalGroupMember -Group 'Remote Desktop Users' -Member 'Spiegel\\redelbergert' && powershell.exe Install-WindowsFeature RSAT-AD-Tools -IncludeAllSubFeature"
+                                                },
+                                                "protectedSettings": {
                                                 }
                                             }
                                         }
                                     ]
                                 }
                             }
-                        },
+                        }
                     ],
                     "outputs": {
                     }
