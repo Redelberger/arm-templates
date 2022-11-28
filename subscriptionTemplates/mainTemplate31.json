@@ -93,6 +93,39 @@
                 "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
             }
         },
+        "defaultNetworkRG": {
+            "type": "string",
+            "defaultValue": "rg-network",
+            "metadata": {
+                "description": "Change, if required the name of the default Network Resource Group"
+            }
+        },
+        "defaultNsgName": {
+            "type": "string",
+            "defaultValue": "[concat('nsg-',parameters('subscriptionName'))]",
+            "metadata": {
+            "displayName": "Change, if required the name of the default Network Security Group (NSG)"
+            }
+        },
+        "defaultRoutingTableName": {
+            "type": "string",
+            "defaultValue": "[concat('rt-',parameters('subscriptionName'))]",
+            "metadata": {
+            "description": "Change, if required the name of the default Routing Table Name"
+            }
+        },
+        "addressSpaceVnet": {
+            "type": "string",
+            "defaultValue": "192.168.20.16/28"
+        },
+        "addressSpaceSubnet": {
+            "type": "string",
+            "defaultValue": "192.168.20.16/28"
+        },
+        "nextHopIpAddress": {
+            "type": "string",
+            "defaultValue": "172.28.63.164"
+        },
         "vmSize": {
             "type": "string",
             "defaultValue": "Standard_B2s",
@@ -201,39 +234,6 @@
             "metadata": {
                 "description": "The name of the storage account."
             }
-        },
-        "defaultNetworkRG": {
-            "type": "string",
-            "defaultValue": "rg-network",
-            "metadata": {
-                "description": "Change, if required the name of the default Network Resource Group"
-            }
-        },
-        "defaultNsgName": {
-            "type": "string",
-            "defaultValue": "[concat('nsg-',parameters('subscriptionName'))]",
-            "metadata": {
-            "displayName": "Change, if required the name of the default Network Security Group (NSG)"
-            }
-        },
-        "defaultRoutingTableName": {
-            "type": "string",
-            "defaultValue": "[concat('rt-',parameters('subscriptionName'))]",
-            "metadata": {
-            "description": "Change, if required the name of the default Routing Table Name"
-            }
-        },
-        "addressSpaceVnet": {
-            "type": "string",
-            "defaultValue": "172.28.62.64/28"
-        },
-        "addressSpaceSubnet": {
-            "type": "string",
-            "defaultValue": "172.28.62.64/28"
-        },
-        "nextHopIpAddress": {
-            "type": "string",
-            "defaultValue": "172.28.63.164"
         }
     },
     "variables": {
@@ -964,7 +964,7 @@
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "resourceGroup": "rg-virtualmachines",
                             "dependsOn": [
-                                "Create-VmRG"
+                                "Create-VmRG", "Create-Network"
                             ],
                             "properties": {
                                 "expressionEvaluationOptions": {
