@@ -355,31 +355,27 @@
                     "bladeTitle": "SizeVM",
                     "elements": [
                         {
-                            "name": "element1",
+                            "name": "sizes",
                             "type": "Microsoft.Compute.SizeSelector",
                             "label": "Size",
                             "toolTip": "",
                             "recommendedSizes": [
-                              "Standard_D1",
-                              "Standard_D2",
-                              "Standard_D3"
+                                "Standard_D32_v4",
+                                "Standard_D48_v4",
+                                "Standard_D64_v4"
                             ],
                             "constraints": {
-                              "allowedSizes": [],
-                              "excludedSizes": [],
-                              "numAvailabilityZonesRequired": 3,
-                              "zone": "3"
-                            },
-                            "options": {
-                              "hideDiskTypeFilter": false
+                                "allowedSizes": [
+                                    "Standard_D4_v4",
+                                    "Standard_D16_v4",
+                                    "Standard_D32_v4",
+                                    "Standard_D48_v4",
+                                    "Standard_D64_v4"
+                                ]
                             },
                             "osPlatform": "Windows",
-                            "imageReference": {
-                              "publisher": "MicrosoftWindowsServer",
-                              "offer": "WindowsServer",
-                              "sku": "2012-R2-Datacenter"
-                            },
-                            "count": 2,
+                             
+                            "count": "1",
                             "visible": true
                         }
                     ]
