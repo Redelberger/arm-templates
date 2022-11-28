@@ -364,6 +364,7 @@
                                 "Standard_D2",
                                 "Standard_D3"
                             ],
+                            "osPlatform": "Windows",
                             "visible": true
                         },
                         {   "name": "windowsOSVersion",
