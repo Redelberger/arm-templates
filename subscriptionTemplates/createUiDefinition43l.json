@@ -354,17 +354,27 @@
                     "label": "Create VM",
                     "bladeTitle": "Create VM",
                     "elements": [
-                        {   "name": "DummiySID",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "DummiySID",
-                            "defaultValue": "[steps('basics').resourceScope.subscription.subscriptionId]",
-                            "toolTip": "[steps('basics').resourceScope.location.name]",
+                        {   "name": "esSubscriptionApi",
+                            "type": "Microsoft.Solutions.ArmApiControl",
+                            "request": {
+                                "method": "GET",
+                                "path": "providers/Microsoft.Subscription/aliases?api-version=2020-09-01"
+                            }
+                        },
+                        {   "name": "DummySubscriptionId",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "subscription Id",
+                            "toolTip": "",
+                            "multiselect": false,
+                            "selectAll": false,
+                            "filter": true,
+                            "filterPlaceholder": "Filter items ...",
+                            "multiLine": true,
+                            "visible": true,
                             "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
+                                "allowedValues": "[map(steps('VmSettings').esSubscriptionApi.value, (sids) => parse(concat('{\"label\":\"', sids.name, '\",\"description\":\"', sids.properties.subscriptionId, '\",\"value\":\"', toLower(sids.properties.subscriptionId), '\"}')) )]",
+                                "required": true
+                            }
                         },
                         {   "name": "vmSize",
                             "type": "Microsoft.Compute.SizeSelector",
@@ -387,7 +397,7 @@
                                 "sku": "2019-Datacenter"
                             },
                             "scope": {
-                                "subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
+                                "subscriptionId": "[steps('VmSettings').DummySubscriptionId]",
                                 "location": "[steps('basics').resourceScope.location.name]"
                             },
                             "visible": true
