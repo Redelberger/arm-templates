@@ -350,40 +350,6 @@
                         }
                     ]
                 },
-                {   "name": "SizeVM",
-                    "label": "SizeVM",
-                    "bladeTitle": "SizeVM",
-                    "elements": [
-                        {
-                            "name": "sizes",
-                            "type": "Microsoft.Compute.SizeSelector",
-                            "label": "Size",
-                            "toolTip": "",
-                            "recommendedSizes": [
-                                "Standard_D32_v4",
-                                "Standard_D48_v4",
-                                "Standard_D64_v4"
-                            ],
-                            "constraints": {
-                                "allowedSizes": [
-                                    "Standard_D4_v4",
-                                    "Standard_D16_v4",
-                                    "Standard_D32_v4",
-                                    "Standard_D48_v4",
-                                    "Standard_D64_v4"
-                                ]
-                            },
-                            "osPlatform": "Windows",
-                             
-                            "count": "1",
-                            "scope": {
-                                "subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
-                                "location": "[steps('basics').resourceScope.location.name]"
-                            },
-                            "visible": true
-                        }
-                    ]
-                },
                 {   "name": "VmSettings",
                     "label": "Create VM",
                     "bladeTitle": "Create VM",
@@ -414,7 +380,11 @@
                                 "offer": "WindowsServer",
                                 "sku": "2019-Datacenter"
                             },
-                            "count": 2,
+                            "count": 1,
+                            "scope": {
+                                "subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
+                                "location": "[steps('basics').resourceScope.location.name]"
+                            },
                             "visible": true
                         },
                         {   "name": "windowsOSVersion",
