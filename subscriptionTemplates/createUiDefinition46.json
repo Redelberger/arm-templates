@@ -354,6 +354,18 @@
                     "label": "Provide Network Settings",
                     "bladeTitle": "Provide Network Settings",
                     "elements": [
+                        {   "name": "defaultNetworkRG",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Default Network RG",
+                            "defaultValue": "rg-network",
+                            "toolTip": "Change, if required the name of the default Network Resource Group",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
                         {   "name": "defaultNsgName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Default Nsg Name",
@@ -520,66 +532,6 @@
                             },
                             "visible": true
                         },
-                        {   "name": "defaultNetworkRG",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Default Network RG",
-                            "defaultValue": "rg-network",
-                            "toolTip": "Change, if required the name of the default Network Resource Group",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {   "name": "defaultVnetName",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Default Vnet Name",
-                            "defaultValue": "[concat('vnet-', steps('SubscriptionSettings').subscriptionName)]",
-                            "toolTip": "Change, if required the name of the default Vnet Name",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {   "name": "defaultSubnetName",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Default Subnet Name",
-                            "defaultValue": "[concat('subnet-', steps('SubscriptionSettings').subscriptionName)]",
-                            "toolTip": "Change, if required the name of the default Subnet Name",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {   "name": "existingVnetId",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Existing Vnet Id",
-                            "defaultValue": "[[resourceId(steps('VmSettings').defaultNetworkRG, 'Microsoft.Network/virtualNetworks', steps('VmSettings').defaultVnetName)]",
-                            "toolTip": "Existing VNET that has access to the domain controllers",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {   "name": "existingSubnetId",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Existing Subnet Id",
-                            "defaultValue": "[[resourceId('rg-network', 'Microsoft.Network/virtualNetworks/subnets', steps('VmSettings').defaultVnetName, steps('VmSettings').defaultSubnetName)]",
-                            "toolTip": "Existing subnet that has access to the domain controllers",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
                         {   "name": "vmName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Vm Name",
@@ -731,13 +683,16 @@
                 "secondThreshold": "[steps('BudgetSettings').secondThreshold]",
                 "contactRoles": "[steps('BudgetSettings').contactRoles]",
                 "contactEmails": "[steps('BudgetSettings').contactEmails]",
+                "defaultNetworkRG": "[steps('NetworkSettings').defaultNetworkRG]",
+                "defaultNsgName": "[steps('NetworkSettings').defaultNsgName]",
+                "defaultVnetName": "[steps('NetworkSettings').defaultVnetName]",
+                "defaultSubnetName": "[steps('NetworkSettings').defaultSubnetName]",
+                "defaultRoutingTableName": "[steps('NetworkSettings').defaultRoutingTableName]",
+                "addressSpaceVnet": "[steps('NetworkSettings').addressSpaceVnet]",
+                "addressSpaceSubnet": "[steps('NetworkSettings').addressSpaceSubnet]",
+                "nextHopIpAddress": "[steps('NetworkSettings').nextHopIpAddress]",
                 "vmSize": "[steps('VmSettings').vmSize]",
                 "windowsOSVersion": "[steps('VmSettings').windowsOSVersion]",
-                "defaultNetworkRG": "[steps('VmSettings').defaultNetworkRG]",
-                "defaultVnetName": "[steps('VmSettings').defaultVnetName]",
-                "defaultSubnetName": "[steps('VmSettings').defaultSubnetName]",
-                "existingVnetId": "[steps('VmSettings').existingVnetId]",
-                "existingSubnetId": "[steps('VmSettings').existingSubnetId]",
                 "vmName": "[steps('VmSettings').vmName]",
                 "domainToJoin": "[steps('VmSettings').domainToJoin]",
                 "NetBIOSdomainToJoin": "[steps('VmSettings').NetBIOSdomainToJoin]",
