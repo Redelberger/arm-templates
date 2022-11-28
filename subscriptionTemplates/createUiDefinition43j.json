@@ -366,13 +366,7 @@
                                     "Standard_B2s",
                                     "Standard_B2ms",
                                     "Standard_B4ms"
-                                ],
-                                "excludedSizes": [],
-                                "numAvailabilityZonesRequired": 3,
-                                "zone": "3"
-                            },
-                            "options": {
-                                "hideDiskTypeFilter": false
+                                ]
                             },
                             "osPlatform": "Windows",
                             "imageReference": {
@@ -380,7 +374,6 @@
                                 "offer": "WindowsServer",
                                 "sku": "2019-Datacenter"
                             },
-                            "count": 1,
                             "scope": {
                                 "subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
                                 "location": "[steps('basics').resourceScope.location.name]"
