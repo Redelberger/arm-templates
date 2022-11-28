@@ -765,7 +765,6 @@
                             "name": "[format('Create-{0}', parameters('vmName'))]",
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "resourceGroup": "rg-virtualmachines",
-                            "location": "[deployment().location]",
                             "dependsOn": [
                                 "Create-VmRG"
                             ],
