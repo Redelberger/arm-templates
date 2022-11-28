@@ -417,7 +417,7 @@
                         {   "name": "addressSpaceVnet",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Address Space Vnet",
-                            "defaultValue": "172.28.62.64/28",
+                            "defaultValue": "192.168.20.20/20",
                             "toolTip": "",
                             "constraints": {
                                 "required": false,
@@ -429,7 +429,7 @@
                         {   "name": "addressSpaceSubnet",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Address Space Subnet",
-                            "defaultValue": "172.28.62.64/28",
+                            "defaultValue": "192.168.20.20/20",
                             "toolTip": "",
                             "constraints": {
                                 "required": false,
