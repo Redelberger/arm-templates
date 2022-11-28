@@ -355,9 +355,9 @@
                     "bladeTitle": "Create VM",
                     "elements": [
                         {
-                            "name": "element1",
+                            "name": "vmSize",
                             "type": "Microsoft.Compute.SizeSelector",
-                            "label": "Size",
+                            "label": "VM Size",
                             "toolTip": "",
                             "recommendedSizes": [
                               "Standard_D1",
