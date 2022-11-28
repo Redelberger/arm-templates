@@ -1,0 +1,715 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "eaEnrollmentAccount": {
+            "type": "string"
+        },
+        "Workload": {
+            "type": "string",
+            "defaultValue": "Production",
+            "allowedValues": [
+                "Production",
+                "DevTest"
+            ]
+        },
+        "subscriptionName": {
+            "type": "string"
+        },
+        "subscriptionOwnerGroupId": {
+            "type": "string"
+        },
+        "subscriptionOwnerId": {
+            "type": "string"
+        },
+        "managementGroupId": {
+            "type": "string"
+        },
+        "budgetName": {
+            "type": "string",
+            "defaultValue": "MyBudget",
+            "metadata": {
+                "description": "Name of the Budget. It should be unique within a resource group."
+            }
+        },
+        "amount": {
+            "type": "int",
+            "defaultValue": 1000,
+            "metadata": {
+                "description": "The total amount of cost or usage to track with the budget"
+            }
+        },
+        "timeGrain": {
+            "type": "string",
+            "defaultValue": "Monthly",
+            "allowedValues": [
+                "Monthly",
+                "Quarterly",
+                "Annually"
+            ],
+            "metadata": {
+                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
+            }
+        },
+        "startDate": {
+            "type": "string",
+            "metadata": {
+                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
+            }
+        },
+        "endDate": {
+            "type": "string",
+            "metadata": {
+                "description": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date."
+            }
+        },
+        "firstThreshold": {
+            "type": "int",
+            "defaultValue": 90,
+            "metadata": {
+                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+            }
+        },
+        "secondThreshold": {
+            "type": "int",
+            "defaultValue": 110,
+            "metadata": {
+                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+            }
+        },
+        "contactRoles": {
+            "type": "array",
+            "defaultValue": [
+                "Owner",
+                "Contributor",
+                "Reader"
+            ],
+            "metadata": {
+                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
+            }
+        },
+        "contactEmails": {
+            "type": "array",
+            "metadata": {
+                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
+            }
+        },
+        "vmSize": {
+            "type": "string",
+            "defaultValue": "Standard_B2s",
+            "metadata": {
+                "description": "Size of VM"
+            },
+            "allowedValues": [
+                "Standard_B2s",
+                "Standard_B2ms",
+                "Standard_B4ms"
+            ]
+        },
+        "windowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2019-Datacenter",
+            "allowedValues": [
+                "2012-R2-Datacenter",
+                "2016-Datacenter",
+                "2019-Datacenter",
+                "2022-Datacenter"
+            ],
+            "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2012-R2-Datacenter, 2016-Datacenter, 2019-Datacenter, 2022-Datacenter."
+            }
+        },
+        "defaultSubscriptionName": {
+            "type": "string",
+            "defaultValue": "[subscription().displayName]",
+            "metadata": {
+                "description": "Change, if required the name of the default Subscription Name"
+            }
+        },
+        "defaultNetworkRG": {
+            "type": "string",
+            "defaultValue": "rg-network",
+            "metadata": {
+                "description": "Change, if required the name of the default Network Resource Group"
+            }
+        },
+        "defaultVnetName": {
+            "type": "string",
+            "defaultValue": "[concat('vnet-',parameters('defaultSubscriptionName'))]",
+            "metadata": {
+                "description": "Change, if required the name of the default Vnet Name"
+            }
+        },
+        "defaultSubnetName": {
+            "type": "string",
+            "defaultValue": "[concat('subnet-',parameters('defaultSubscriptionName'))]",
+            "metadata": {
+                "description": "Change, if required the name of the default Subnet Name"
+            }
+        },
+        "existingVnetId": {
+            "type": "string",
+            "defaultValue": "[resourceId(parameters('defaultNetworkRG'), 'Microsoft.Network/virtualNetworks', parameters('defaultVnetName'))]",
+            "metadata": {
+                "description": "Existing VNET that has access to the domain controllers"
+            }
+        },
+        "existingSubnetId": {
+            "type": "string",
+            "defaultValue": "[resourceId('rg-network', 'Microsoft.Network/virtualNetworks/subnets', parameters('defaultVnetName'), parameters('defaultSubnetName'))]",
+            "metadata": {
+                "description": "Existing subnet that has access to the domain controllers"
+            }
+        },
+        "vmName": {
+            "type": "string",
+            "defaultValue": "vm-test-01-d",
+            "maxLength": 15,
+            "minLength": 1,
+            "metadata": {
+                "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+            }
+        },
+        "domainToJoin": {
+            "type": "string",
+            "defaultValue": "spiegel.spiegel.de",
+            "metadata": {
+                "description": "The FQDN of the AD domain"
+            }
+        },
+        "NetBIOSdomainToJoin": {
+            "type": "string",
+            "defaultValue": "SPIEGEL",
+            "metadata": {
+                "description": "The NetBIOS Name of the AD domain"
+            }
+        },
+        "domainUsername": {
+            "type": "string",
+            "defaultValue": "svc.adjoin-vmserver-",
+            "metadata": {
+                "description": "Username with domain-join privileges"
+            }
+        },
+        "domainPassword": {
+            "type": "secureString",
+            "metadata": {
+                "description": "Password of the account with domain-join privileges"
+            }
+        },
+        "ouPath": {
+            "type": "string",
+            "defaultValue": "CN=Computers,DC=spiegel,DC=spiegel,DC=de",
+            "metadata": {
+                "description": "Organizational Unit path in which the object will be created."
+            }
+        },
+        "domainJoinOptions": {
+            "type": "int",
+            "defaultValue": 3,
+            "metadata": {
+                "description": "Set of bit flags that define the join options. Default value of 3 is a combination of NETSETUP_JOIN_DOMAIN (0x00000001) & NETSETUP_ACCT_CREATE (0x00000002) i.e. will join the domain and create the account on the domain. For more information see https://msdn.microsoft.com/en-us/library/aa392154(v=vs.85).aspx"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "localAdmin",
+            "metadata": {
+                "description": "The name of the local administrator of the new VM."
+            }
+        },
+        "adminPassword": {
+            "type": "secureString",
+            "metadata": {
+                "description": "The password for the local administrator account of the new VM."
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "[uniqueString(resourceGroup().id, deployment().name)]",
+            "metadata": {
+                "description": "The name of the storage account."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {   "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[format('Create-{0}', parameters('subscriptionName'))]",
+            "location": "[deployment().location]",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                    "eaEnrollmentAccount": {
+                        "value": "[parameters('eaEnrollmentAccount')]"
+                    },
+                    "Workload": {
+                        "value": "[parameters('Workload')]"
+                    },
+                    "subscriptionName": {
+                        "value": "[parameters('subscriptionName')]"
+                    },
+                    "subscriptionOwnerId": {
+                        "value": "[parameters('subscriptionOwnerId')]"
+                    },
+                    "managementGroupId": {
+                        "value": "[parameters('managementGroupId')]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "eaEnrollmentAccount": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "EnrollmentAccount used for subscription billing"
+                            }
+                        },
+                        "Workload": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The workload type of the subscription. It can be either Production or DevTest."
+                            }
+                        },
+                        "subscriptionName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Subscription Name to assign to the subscription"
+                            }
+                        },
+                        "subscriptionOwnerId": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "subscriptionOwnerId for the subscription"
+                            }
+                        },
+                        "managementGroupId": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "managementGroupId to place subscription into"
+                            }
+                        }
+                    },
+                    "resources": [
+                        {   "type": "Microsoft.Subscription/aliases",
+                            "apiVersion": "2020-09-01",
+                            "scope": "/",
+                            "name": "[parameters('subscriptionName')]",
+                            "properties": {
+                                "workLoad": "[parameters('Workload')]",
+                                "displayName": "[parameters('subscriptionName')]",
+                                "billingScope": "[parameters('eaEnrollmentAccount')]",
+                                "managementGroupId": "[parameters('managementGroupId')]",
+                                "subscriptionOwnerId": "[parameters('subscriptionOwnerId')]",
+                                "tags": "[concat('Ansprechpartner:', parameters('subscriptionOwnerId'))]"
+                            }
+                        }
+                    ],
+                    "outputs": {
+                        "subscriptionId": {
+                            "type": "string",
+                            "value": "[reference(tenantResourceId('Microsoft.Subscription/aliases', parameters('subscriptionName'))).subscriptionId]"
+                        }
+                    }
+                }
+            }
+        },
+        {   "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[format('Create-nestedResources-for-{0}', parameters('subscriptionName'))]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[format('Create-{0}', parameters('subscriptionName'))]"
+            ],
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                    "subscriptionId": {
+                        "value": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', format('Create-{0}', parameters('subscriptionName')))).outputs.subscriptionId.value]"
+                    },
+                    "budgetName": {
+                        "value": "[parameters('budgetName')]"
+                    },
+                    "startDate": {
+                        "value": "[parameters('startDate')]"
+                    },
+                    "endDate": {
+                        "value": "[parameters('endDate')]"
+                    },
+                    "timeGrain": {
+                        "value": "[parameters('timeGrain')]"
+                    },
+                    "amount": {
+                        "value": "[parameters('amount')]"
+                    },
+                    "firstThreshold": {
+                        "value": "[parameters('firstThreshold')]"
+                    },
+                    "secondThreshold": {
+                        "value": "[parameters('secondThreshold')]"
+                    },
+                    "contactEmails": {
+                        "value": "[parameters('contactEmails')]"
+                    },
+                    "contactRoles": {
+                        "value": "[parameters('contactRoles')]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "subscriptionId": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "ID of the Subscrption to attach the budget to."
+                            }
+                        },
+                        "budgetName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Name of the Budget. It should be unique within a resource group."
+                            }
+                        },
+                        "startDate": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
+                            }
+                        },
+                        "endDate": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date."
+                            }
+                        },
+                        "timeGrain": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
+                            }
+                        },
+                        "amount": {
+                            "type": "int",
+                            "metadata": {
+                                "description": "The total amount of cost or usage to track with the budget"
+                            }
+                        },
+                        "firstThreshold": {
+                            "type": "int",
+                            "metadata": {
+                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                            }
+                        },
+                        "secondThreshold": {
+                            "type": "int",
+                            "metadata": {
+                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                            }
+                        },
+                        "contactEmails": {
+                            "type": "array",
+                            "metadata": {
+                                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
+                            }
+                        },
+                        "contactRoles": {
+                            "type": "array",
+                            "metadata": {
+                                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
+                            }
+                        }
+                    },
+                    "resources": [
+                        {   "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-10-01",
+                            "name": "[format('Create-{0}', parameters('budgetName'))]",
+                            "subscriptionId": "[parameters('subscriptionId')]",
+                            "location": "[deployment().location]",
+                            "properties": {
+                                "expressionEvaluationOptions": {
+                                    "scope": "inner"
+                                },
+                                "mode": "Incremental",
+                                "parameters": {
+                                    "budgetName": {
+                                        "value": "[parameters('budgetName')]"
+                                    },
+                                    "startDate": {
+                                        "value": "[parameters('startDate')]"
+                                    },
+                                    "endDate": {
+                                        "value": "[parameters('endDate')]"
+                                    },
+                                    "timeGrain": {
+                                        "value": "[parameters('timeGrain')]"
+                                    },
+                                    "amount": {
+                                        "value": "[parameters('amount')]"
+                                    },
+                                    "firstThreshold": {
+                                        "value": "[parameters('firstThreshold')]"
+                                    },
+                                    "secondThreshold": {
+                                        "value": "[parameters('secondThreshold')]"
+                                    },
+                                    "contactEmails": {
+                                        "value": "[parameters('contactEmails')]"
+                                    },
+                                    "contactRoles": {
+                                        "value": "[parameters('contactRoles')]"
+                                    }
+                                },
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {
+                                        "budgetName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "Name of the Budget. It should be unique within a resource group."
+                                            }
+                                        },
+                                        "startDate": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
+                                            }
+                                        },
+                                        "endDate": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date."
+                                            }
+                                        },
+                                        "timeGrain": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
+                                            }
+                                        },
+                                        "amount": {
+                                            "type": "int",
+                                            "metadata": {
+                                                "description": "The total amount of cost or usage to track with the budget"
+                                            }
+                                        },
+                                        "firstThreshold": {
+                                            "type": "int",
+                                            "metadata": {
+                                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                                            }
+                                        },
+                                        "secondThreshold": {
+                                            "type": "int",
+                                            "metadata": {
+                                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                                            }
+                                        },
+                                        "contactEmails": {
+                                            "type": "array",
+                                            "metadata": {
+                                                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
+                                            }
+                                        },
+                                        "contactRoles": {
+                                            "type": "array",
+                                            "metadata": {
+                                                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
+                                            }
+                                        }
+                                    },
+                                    "resources": [
+                                        {   "type": "Microsoft.Consumption/budgets",
+                                            "apiVersion": "2021-10-01",
+                                            "name": "[parameters('budgetName')]",
+                                            "properties": {
+                                                "timePeriod": {
+                                                    "startDate": "[parameters('startDate')]",
+                                                    "endDate": "[parameters('endDate')]"
+                                                },
+                                                "timeGrain": "[parameters('timeGrain')]",
+                                                "amount": "[parameters('amount')]",
+                                                "category": "Cost",
+                                                "notifications": {
+                                                    "NotificationForExceededBudget1": {
+                                                    "enabled": true,
+                                                    "operator": "GreaterThan",
+                                                    "threshold": "[parameters('firstThreshold')]",
+                                                    "contactEmails": "[parameters('contactEmails')]",
+                                                    "contactRoles": "[parameters('contactRoles')]"
+                                                    },
+                                                    "NotificationForExceededBudget2": {
+                                                    "enabled": true,
+                                                    "operator": "GreaterThan",
+                                                    "threshold": "[parameters('secondThreshold')]",
+                                                    "contactEmails": "[parameters('contactEmails')]",
+                                                    "contactRoles": "[parameters('contactRoles')]",
+                                                    "thresholdType": "Forecasted"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {   "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-10-01",
+                            "name": "[format('Create-{0}', parameters('budgetName'))]",
+                            "subscriptionId": "[parameters('subscriptionId')]",
+                            "location": "[deployment().location]",
+                            "properties": {
+                                "expressionEvaluationOptions": {
+                                    "scope": "inner"
+                                },
+                                "mode": "Incremental",
+                                "parameters": {
+                                    "budgetName": {
+                                        "value": "[parameters('budgetName')]"
+                                    },
+                                    "startDate": {
+                                        "value": "[parameters('startDate')]"
+                                    },
+                                    "endDate": {
+                                        "value": "[parameters('endDate')]"
+                                    },
+                                    "timeGrain": {
+                                        "value": "[parameters('timeGrain')]"
+                                    },
+                                    "amount": {
+                                        "value": "[parameters('amount')]"
+                                    },
+                                    "firstThreshold": {
+                                        "value": "[parameters('firstThreshold')]"
+                                    },
+                                    "secondThreshold": {
+                                        "value": "[parameters('secondThreshold')]"
+                                    },
+                                    "contactEmails": {
+                                        "value": "[parameters('contactEmails')]"
+                                    },
+                                    "contactRoles": {
+                                        "value": "[parameters('contactRoles')]"
+                                    }
+                                },
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {
+                                        "budgetName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "Name of the Budget. It should be unique within a resource group."
+                                            }
+                                        },
+                                        "startDate": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
+                                            }
+                                        },
+                                        "endDate": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date."
+                                            }
+                                        },
+                                        "timeGrain": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
+                                            }
+                                        },
+                                        "amount": {
+                                            "type": "int",
+                                            "metadata": {
+                                                "description": "The total amount of cost or usage to track with the budget"
+                                            }
+                                        },
+                                        "firstThreshold": {
+                                            "type": "int",
+                                            "metadata": {
+                                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                                            }
+                                        },
+                                        "secondThreshold": {
+                                            "type": "int",
+                                            "metadata": {
+                                                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0.01 and 1000."
+                                            }
+                                        },
+                                        "contactEmails": {
+                                            "type": "array",
+                                            "metadata": {
+                                                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
+                                            }
+                                        },
+                                        "contactRoles": {
+                                            "type": "array",
+                                            "metadata": {
+                                                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
+                                            }
+                                        }
+                                    },
+                                    "resources": [
+                                        {   "type": "Microsoft.Consumption/budgets",
+                                            "apiVersion": "2021-10-01",
+                                            "name": "[parameters('budgetName')]",
+                                            "properties": {
+                                                "timePeriod": {
+                                                    "startDate": "[parameters('startDate')]",
+                                                    "endDate": "[parameters('endDate')]"
+                                                },
+                                                "timeGrain": "[parameters('timeGrain')]",
+                                                "amount": "[parameters('amount')]",
+                                                "category": "Cost",
+                                                "notifications": {
+                                                    "NotificationForExceededBudget1": {
+                                                    "enabled": true,
+                                                    "operator": "GreaterThan",
+                                                    "threshold": "[parameters('firstThreshold')]",
+                                                    "contactEmails": "[parameters('contactEmails')]",
+                                                    "contactRoles": "[parameters('contactRoles')]"
+                                                    },
+                                                    "NotificationForExceededBudget2": {
+                                                    "enabled": true,
+                                                    "operator": "GreaterThan",
+                                                    "threshold": "[parameters('secondThreshold')]",
+                                                    "contactEmails": "[parameters('contactEmails')]",
+                                                    "contactRoles": "[parameters('contactRoles')]",
+                                                    "thresholdType": "Forecasted"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                    ],
+                    "outputs": {
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
