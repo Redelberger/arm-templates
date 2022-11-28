@@ -359,6 +359,11 @@
                             "type": "Microsoft.Compute.SizeSelector",
                             "label": "VM Size",
                             "toolTip": "",
+                            "recommendedSizes": [
+                                "Standard_D1",
+                                "Standard_D2",
+                                "Standard_D3"
+                            ],
                             "visible": true
                         },
                         {   "name": "windowsOSVersion",
