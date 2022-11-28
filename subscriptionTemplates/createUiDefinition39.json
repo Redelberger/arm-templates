@@ -98,14 +98,27 @@
                         {   "name": "Workload",
                             "type": "Microsoft.Common.DropDown",
                             "label": "Workload",
-                            "toolTip": "The workload type of the subscription. It can be either Production or DevTest.",
-                            "defaultValue": "Production",
                             "placeholder": "Workload..",
+                            "defaultValue": "Production",
+                            "toolTip": "The workload type of the subscription. It can be either Production or DevTest.",
+                            "multiselect": false,
+                            "selectAll": false,
+                            "filter": false,
+                            "filterPlaceholder": "Workload type...",
+                            "multiLine": true,
                             "visible": true,
                             "constraints": {
                                 "allowedValues": [
-                                    "Production",
-                                    "DevTest"
+                                    {
+                                        "label": "Production",
+                                        "description": "The workload type of the subscription. It can be either Production or DevTest",
+                                        "value": "Production"
+                                    },
+                                    {
+                                        "label": "DevTest",
+                                        "description": "The workload type of the subscription. It can be either Production or DevTest",
+                                        "value": "DevTest"
+                                    }
                                 ],
                                 "required": true
                             }
