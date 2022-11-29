@@ -417,7 +417,7 @@
                         {   "name": "addressSpaceVnet",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Address Space Vnet",
-                            "defaultValue": "192.168.20.16/28",
+                            "defaultValue": "172.28.62.128/28",
                             "toolTip": "",
                             "constraints": {
                                 "required": false,
@@ -429,7 +429,7 @@
                         {   "name": "addressSpaceSubnet",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Address Space Subnet",
-                            "defaultValue": "192.168.20.16/28",
+                            "defaultValue": "172.28.62.128/28",
                             "toolTip": "",
                             "constraints": {
                                 "required": false,
@@ -453,7 +453,7 @@
                         {   "name": "CreateHubPeering",
                             "type": "Microsoft.Common.OptionsGroup",
                             "label": "Create also HubPeering?",
-                            "defaultValue": "No",
+                            "defaultValue": "Yes",
                             "toolTip": "If 'Yes is selected, you will also create the HubPeering, but need corresponding permissions in the hub network resource group!",
                             "constraints": {
                                 "allowedValues": [
