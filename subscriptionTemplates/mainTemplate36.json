@@ -1137,6 +1137,9 @@
                                     "vmName": {
                                         "value": "[parameters('vmName')]"
                                     },
+                                    "CreateHubPeering": {
+                                        "value": "[parameters('CreateHubPeering')]"
+                                    },
                                     "domainToJoin": {
                                         "value": "[parameters('domainToJoin')]"
                                     },
@@ -1219,6 +1222,13 @@
                                             "defaultValue": "[concat('subnet-',parameters('subscriptionName'))]",
                                             "metadata": {
                                                 "description": "Change, if required the name of the default Subnet Name"
+                                            }
+                                        },
+                                        "CreateHubPeering": {
+                                            "type": "string",
+                                            "defaultValue": "No",
+                                            "metadata": {
+                                                "description": "Existing Hub Peering would be required to be able to Join Vm to on-prem AD"
                                             }
                                         },
                                         "vmName": {
@@ -1381,6 +1391,7 @@
                                             ]
                                         },
                                         {   "type": "Microsoft.Compute/virtualMachines/extensions",
+                                            "condition": "[equals(parameters('CreateHubPeering'), 'Yes')]",
                                             "apiVersion": "2021-03-01",
                                             "name": "[format('{0}/{1}', parameters('vmName'), 'joindomain')]",
                                             "location": "[parameters('location')]",
