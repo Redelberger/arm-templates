@@ -107,6 +107,20 @@
             "displayName": "Change, if required the name of the default Network Security Group (NSG)"
             }
         },
+        "defaultVnetName": {
+            "type": "string",
+            "defaultValue": "[concat('vnet-', parameters('subscriptionName'))]",
+            "metadata": {
+                "description": "Change, if required the name of the default Vnet Name"
+            }
+        },
+        "defaultSubnetName": {
+            "type": "string",
+            "defaultValue": "[concat('snet-', parameters('subscriptionName'))]",
+            "metadata": {
+                "description": "Change, if required the name of the default Subnet Name"
+            }
+        },
         "defaultRoutingTableName": {
             "type": "string",
             "defaultValue": "[concat('rt-',parameters('subscriptionName'))]",
@@ -149,20 +163,6 @@
             ],
             "metadata": {
                 "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2012-R2-Datacenter, 2016-Datacenter, 2019-Datacenter, 2022-Datacenter."
-            }
-        },
-        "defaultVnetName": {
-            "type": "string",
-            "defaultValue": "[concat('vnet-', parameters('subscriptionName'))]",
-            "metadata": {
-                "description": "Change, if required the name of the default Vnet Name"
-            }
-        },
-        "defaultSubnetName": {
-            "type": "string",
-            "defaultValue": "[concat('subnet-', parameters('subscriptionName'))]",
-            "metadata": {
-                "description": "Change, if required the name of the default Subnet Name"
             }
         },
         "vmName": {
@@ -388,6 +388,9 @@
                     "addressSpaceSubnet": {
                         "value": "[parameters('addressSpaceSubnet')]"
                     },
+                    "subscriptionName": {
+                        "value": "[parameters('subscriptionName')]"
+                    },
                     "nextHopIpAddress": {
                         "value": "[parameters('nextHopIpAddress')]"
                     },
@@ -529,6 +532,9 @@
                             "type": "string"
                         },
                         "nextHopIpAddress": {
+                            "type": "string"
+                        },
+                        "subscriptionName": {
                             "type": "string"
                         },
                         "vmSize": {
@@ -807,6 +813,9 @@
                                     "location": {
                                         "value": "[deployment().location]"
                                     },
+                                    "subscriptionName": {
+                                        "value": "[parameters('subscriptionName')]"
+                                    },
                                     "defaultNsgName": {
                                         "value": "[parameters('defaultNsgName')]"
                                     },
@@ -838,6 +847,9 @@
                                             "metadata": {
                                                 "description": "The lcoation for the resource"
                                             }
+                                        },
+                                        "subscriptionName": {
+                                            "type": "string"
                                         },
                                         "defaultNsgName": {
                                             "type": "string",
@@ -953,7 +965,90 @@
                                                         }
                                                     ]
                                                 }
+                                            },
+                                            {   "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                                                "apiVersion": "2020-05-01",
+                                                "name": "[concat(parameters('defaultVnetName'), '/', format('peer-vnet-hub-2-{0}', parameters('subscriptionName')))]",
+                                                "dependsOn": [
+                                                    "[parameters('defaultVnetName')]"
+                                                ],
+                                                "properties": {
+                                                    "remoteVirtualNetwork": {
+                                                        "id": "/subscriptions/82070651-ed70-4d25-a739-11eb43c460b8/resourceGroups/rg-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub"
+                                                    },
+                                                    "allowVirtualNetworkAccess": true,
+                                                    "allowForwardedTraffic": true,
+                                                    "allowGatewayTransit": true,
+                                                    "useRemoteGateways": true
+                                                }
                                             }
+                                    ]
+                                }
+                            }
+                        },
+                        {   "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-10-01",
+                            "name": "Create-HubPeering",
+                            "subscriptionId": "82070651-ed70-4d25-a739-11eb43c460b8",
+                            "resourceGroup": "rg-hub",
+                            "dependsOn": [
+                                "Create-Network"
+                            ],
+                            "properties": {
+                                "expressionEvaluationOptions": {
+                                    "scope": "inner"
+                                },
+                                "mode": "Incremental",
+                                "parameters": {
+                                    "subscriptionId": {
+                                        "value": "[parameters('subscriptionId')]"
+                                    },
+                                    "subscriptionName": {
+                                        "value": "[parameters('subscriptionName')]"
+                                    },
+                                    "defaultVnetName": {
+                                        "value": "[parameters('defaultVnetName')]"
+                                    }
+                                },
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {
+                                        "subscriptionId": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "Set the Subscription ID"
+                                            }
+                                        },
+                                        "subscriptionName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "Set the Subscription Name"
+                                            }
+                                        },
+                                        "defaultVnetName": {
+                                            "type": "string",
+                                            "metadata": {
+                                                "description": "Set the remote VNet name"
+                                            }
+                                        }
+                                    },
+                                    "variables": {
+                                    },
+                                    "resources": [
+                                        {   "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                                            "apiVersion": "2021-02-01",
+                                            "name": "[format('peer-vnet-hub-2-{0}', parameters('subscriptionName'))]",
+                                            "properties": {
+                                                "allowVirtualNetworkAccess": true,
+                                                "allowForwardedTraffic": true,
+                                                "allowGatewayTransit": true,
+                                                "useRemoteGateways": false,
+                                                "remoteVirtualNetwork": {
+                                                    "id": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourceGroups/rg-network/providers/Microsoft.Network/virtualNetworks/', parameters('defaultVnetName'))]"
+                                                }
+                                            }
+                                        }
                                     ]
                                 }
                             }
