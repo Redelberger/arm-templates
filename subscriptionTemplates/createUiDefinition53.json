@@ -478,7 +478,7 @@
                         {   "name": "CreateVM",
                             "type": "Microsoft.Common.OptionsGroup",
                             "label": "Create VM",
-                            "defaultValue": "No",
+                            "defaultValue": "Yes",
                             "toolTip": "If 'Yes is selected, you are able to also create an Windows VM and join it to the on-prem AD.",
                             "constraints": {
                                 "allowedValues": [
