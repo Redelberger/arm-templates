@@ -456,8 +456,28 @@
                     "label": "Create VM",
                     "bladeTitle": "Create VM",
                     "elements": [
+                        {   "name": "CreateVM",
+                            "type": "Microsoft.Common.OptionsGroup",
+                            "label": "Create VM",
+                            "defaultValue": "No",
+                            "toolTip": "If 'Yes is selected, you are able to also create an Windows VM and join it to the on-prem AD.",
+                            "constraints": {
+                                "allowedValues": [
+                                    {
+                                        "label": "Yes",
+                                        "value": "Yes"
+                                    },
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ]
+                            },
+                            "visible": true
+                        },
                         {   "name": "esSubscriptionApi",
                             "type": "Microsoft.Solutions.ArmApiControl",
+                            "visible": false,
                             "request": {
                                 "method": "GET",
                                 "path": "providers/Microsoft.Subscription/aliases?api-version=2020-09-01"
@@ -465,6 +485,7 @@
                         },
                         {   "name": "DummySubscriptionId",
                             "type": "Microsoft.Common.DropDown",
+                            "visible": false,
                             "label": "subscription Id",
                             "toolTip": "",
                             "multiselect": false,
@@ -472,10 +493,9 @@
                             "filter": true,
                             "filterPlaceholder": "Filter items ...",
                             "multiLine": true,
-                            "visible": true,
                             "constraints": {
                                 "allowedValues": "[map(steps('VmSettings').esSubscriptionApi.value, (sids) => parse(concat('{\"label\":\"', sids.name, '\",\"description\":\"', sids.properties.subscriptionId, '\",\"value\":\"', toLower(sids.properties.subscriptionId), '\"}')) )]",
-                                "required": true
+                                "required": false
                             }
                         },
                         {   "name": "vmSize",
@@ -499,10 +519,10 @@
                                 "sku": "2019-Datacenter"
                             },
                             "scope": {
-                                "subscriptionId": "[steps('VmSettings').DummySubscriptionId]",
+                                "subscriptionId": "82070651-ed70-4d25-a739-11eb43c460b8",
                                 "location": "[steps('basics').resourceScope.location.name]"
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "windowsOSVersion",
                             "type": "Microsoft.Common.DropDown",
@@ -530,7 +550,7 @@
                                     }
                                 ]
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "vmName",
                             "type": "Microsoft.Common.TextBox",
@@ -542,7 +562,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "domainToJoin",
                             "type": "Microsoft.Common.TextBox",
@@ -554,7 +574,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "NetBIOSdomainToJoin",
                             "type": "Microsoft.Common.TextBox",
@@ -566,7 +586,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "domainUsername",
                             "type": "Microsoft.Common.TextBox",
@@ -578,7 +598,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "domainPassword",
                             "type": "Microsoft.Common.PasswordBox",
@@ -595,7 +615,7 @@
                             "options": {
                                 "hideConfirmation": true
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "ouPath",
                             "type": "Microsoft.Common.TextBox",
@@ -607,7 +627,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "domainJoinOptions",
                             "type": "Microsoft.Common.TextBox",
@@ -619,7 +639,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "adminUsername",
                             "type": "Microsoft.Common.TextBox",
@@ -631,7 +651,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "adminPassword",
                             "type": "Microsoft.Common.PasswordBox",
@@ -648,7 +668,7 @@
                             "options": {
                                 "hideConfirmation": true
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         },
                         {   "name": "storageAccountName",
                             "type": "Microsoft.Common.TextBox",
@@ -660,7 +680,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('VmSettings').CreateVM, 'Yes')]"
                         }
                     ]
                 }
@@ -691,6 +711,7 @@
                 "addressSpaceVnet": "[steps('NetworkSettings').addressSpaceVnet]",
                 "addressSpaceSubnet": "[steps('NetworkSettings').addressSpaceSubnet]",
                 "nextHopIpAddress": "[steps('NetworkSettings').nextHopIpAddress]",
+                "CreateVM": "[steps('VmSettings').CreateVM]",
                 "vmSize": "[steps('VmSettings').vmSize]",
                 "windowsOSVersion": "[steps('VmSettings').windowsOSVersion]",
                 "vmName": "[steps('VmSettings').vmName]",
