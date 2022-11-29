@@ -393,7 +393,7 @@
                         {   "name": "defaultSubnetName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Default Subnet Name",
-                            "defaultValue": "[concat('subnet-',steps('SubscriptionSettings').subscriptionName)]",
+                            "defaultValue": "[concat('snet-',steps('SubscriptionSettings').subscriptionName)]",
                             "toolTip": "Change, if required the name of the default Subnet Name",
                             "constraints": {
                                 "required": false,
