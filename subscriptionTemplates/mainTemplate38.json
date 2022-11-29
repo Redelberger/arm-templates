@@ -320,6 +320,12 @@
                             "metadata": {
                                 "description": "managementGroupId to place subscription into"
                             }
+                        },
+                        "subscriptionTags": {
+                            "type": "object",
+                            "defaultValue": {
+                                "Ansprechpartner": "parameters('subscriptionOwnerId')"
+                            }
                         }
                     },
                     "resources": [
@@ -333,7 +339,7 @@
                                 "billingScope": "[parameters('eaEnrollmentAccount')]",
                                 "managementGroupId": "[parameters('managementGroupId')]",
                                 "subscriptionOwnerId": "[parameters('subscriptionOwnerId')]",
-                                "tags": "[concat('Ansprechpartner:', parameters('subscriptionOwnerId'))]"
+                                "tags": "[parameters('subscriptionTags')]"
                             }
                         }
                     ],
