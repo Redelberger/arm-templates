@@ -324,7 +324,7 @@
                         "subscriptionTags": {
                             "type": "object",
                             "defaultValue": {
-                                "Ansprechpartner": "parameters('subscriptionOwnerId')"
+                                "Ansprechpartner": "[parameters('subscriptionOwnerId')]"
                             }
                         }
                     },
