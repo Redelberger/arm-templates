@@ -1428,7 +1428,7 @@
                                                 "typeHandlerVersion": "1.7",
                                                 "autoUpgradeMinorVersion": true,
                                                 "settings": {
-                                                    "commandToExecute": "powershell.exe Add-LocalGroupMember -Group 'Administrators' -Member 'adm.tobias.redelberger@spiegel.de' && powershell.exe Add-LocalGroupMember -Group 'Remote Desktop Users' -Member 'Spiegel\\redelbergert' && powershell.exe Install-WindowsFeature RSAT-AD-Tools -IncludeAllSubFeature"
+                                                    "commandToExecute": "powershell.exe Install-WindowsFeature RSAT-AD-Tools -IncludeAllSubFeature && powershell.exe Add-LocalGroupMember -Group 'Administrators' -Member 'adm.tobias.redelberger@spiegel.de' && powershell.exe Add-LocalGroupMember -Group 'Remote Desktop Users' -Member 'Spiegel\\redelbergert'"
                                                 },
                                                 "protectedSettings": {
                                                 }
