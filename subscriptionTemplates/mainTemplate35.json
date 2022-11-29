@@ -876,6 +876,9 @@
                                     },
                                     "nextHopIpAddress": {
                                         "value": "[parameters('nextHopIpAddress')]"
+                                    },
+                                    "CreateHubPeering": {
+                                        "value": "[parameters('CreateHubPeering')]"
                                     }
                                 },
                                 "template": {
@@ -922,6 +925,9 @@
                                             "type": "string"
                                         },
                                         "nextHopIpAddress": {
+                                            "type": "string"
+                                        },
+                                        "CreateHubPeering": {
                                             "type": "string"
                                         }
                                     },
@@ -1007,6 +1013,7 @@
                                                 }
                                             },
                                             {   "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                                                "condition": "[equals(parameters('CreateHubPeering'), 'Yes')]",
                                                 "apiVersion": "2020-05-01",
                                                 "name": "[concat(parameters('defaultVnetName'), '/', format('peer-vnet-hub-2-{0}', parameters('subscriptionName')))]",
                                                 "dependsOn": [
