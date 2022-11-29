@@ -1114,7 +1114,7 @@
                             "subscriptionId": "[parameters('subscriptionId')]",
                             "resourceGroup": "rg-virtualmachines",
                             "dependsOn": [
-                                "Create-VmRG", "Create-Network"
+                                "Create-VmRG", "Create-Network", "Create-HubPeering"
                             ],
                             "properties": {
                                 "expressionEvaluationOptions": {
