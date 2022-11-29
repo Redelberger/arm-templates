@@ -449,6 +449,25 @@
                                 "validationMessage": ""
                             },
                             "visible": true
+                        },
+                        {   "name": "CreateHubPeering",
+                            "type": "Microsoft.Common.OptionsGroup",
+                            "label": "Create also HubPeering?",
+                            "defaultValue": "No",
+                            "toolTip": "If 'Yes is selected, you will also create the HubPeering, but need corresponding permissions in the hub network resource group!",
+                            "constraints": {
+                                "allowedValues": [
+                                    {
+                                        "label": "Yes",
+                                        "value": "Yes"
+                                    },
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ]
+                            },
+                            "visible": true
                         }
                     ]
                 },
@@ -711,6 +730,7 @@
                 "addressSpaceVnet": "[steps('NetworkSettings').addressSpaceVnet]",
                 "addressSpaceSubnet": "[steps('NetworkSettings').addressSpaceSubnet]",
                 "nextHopIpAddress": "[steps('NetworkSettings').nextHopIpAddress]",
+                "CreateHubPeering": "[steps('NetworkSettings').CreateHubPeering]",
                 "CreateVM": "[steps('VmSettings').CreateVM]",
                 "vmSize": "[steps('VmSettings').vmSize]",
                 "windowsOSVersion": "[steps('VmSettings').windowsOSVersion]",
