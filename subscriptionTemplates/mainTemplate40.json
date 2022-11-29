@@ -1032,7 +1032,7 @@
                                                     "allowVirtualNetworkAccess": true,
                                                     "allowForwardedTraffic": true,
                                                     "allowGatewayTransit": true,
-                                                    "useRemoteGateways": true
+                                                    "useRemoteGateways": false
                                                 }
                                             }
                                     ]
