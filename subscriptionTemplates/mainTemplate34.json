@@ -140,6 +140,17 @@
             "type": "string",
             "defaultValue": "172.28.63.164"
         },
+        "CreateHubPeering": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected, you will also create the HubPeering, but need corresponding permissions in the hub network resource group!"
+            }
+        },
         "CreateVM": {
             "type": "string",
             "defaultValue": "No",
@@ -405,6 +416,9 @@
                     "nextHopIpAddress": {
                         "value": "[parameters('nextHopIpAddress')]"
                     },
+                    "CreateHubPeering": {
+                        "value": "[parameters('CreateHubPeering')]"
+                    },
                     "CreateVM": {
                         "value": "[parameters('CreateVM')]"
                     },
@@ -550,6 +564,12 @@
                         },
                         "subscriptionName": {
                             "type": "string"
+                        },
+                        "CreateHubPeering": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Create also Hub Peering?"
+                            }
                         },
                         "CreateVM": {
                             "type": "string",
@@ -1007,6 +1027,7 @@
                             }
                         },
                         {   "type": "Microsoft.Resources/deployments",
+                            "condition": "[equals(parameters('CreateHubPeering'), 'Yes')]",
                             "apiVersion": "2020-10-01",
                             "name": "Create-HubPeering",
                             "subscriptionId": "82070651-ed70-4d25-a739-11eb43c460b8",
