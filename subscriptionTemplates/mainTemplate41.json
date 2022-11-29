@@ -1092,7 +1092,7 @@
                                     "resources": [
                                         {   "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                                             "apiVersion": "2021-02-01",
-                                            "name": "[format('peer-vnet-hub-2-{0}', parameters('subscriptionName'))]",
+                                            "name": "[format('vnet-hub/peer-vnet-hub-2-{0}', parameters('subscriptionName'))]",
                                             "properties": {
                                                 "allowVirtualNetworkAccess": true,
                                                 "allowForwardedTraffic": true,
