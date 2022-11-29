@@ -140,6 +140,17 @@
             "type": "string",
             "defaultValue": "172.28.63.164"
         },
+        "CreateVM": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected a corresponding VM is created and joined to the on-prem AD"
+            }
+        },
         "vmSize": {
             "type": "string",
             "defaultValue": "Standard_B2s",
@@ -394,6 +405,9 @@
                     "nextHopIpAddress": {
                         "value": "[parameters('nextHopIpAddress')]"
                     },
+                    "CreateVM": {
+                        "value": "[parameters('CreateVM')]"
+                    },
                     "vmSize": {
                         "value": "[parameters('vmSize')]"
                     },
@@ -536,6 +550,12 @@
                         },
                         "subscriptionName": {
                             "type": "string"
+                        },
+                        "CreateVM": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Create VM?"
+                            }
                         },
                         "vmSize": {
                             "type": "string",
@@ -1054,6 +1074,7 @@
                             }
                         },
                         {   "type": "Microsoft.Resources/deployments",
+                            "condition": "[equals(parameters('CreateVM'), 'Yes')]",
                             "apiVersion": "2020-10-01",
                             "name": "[format('Create-{0}', parameters('vmName'))]",
                             "subscriptionId": "[parameters('subscriptionId')]",
